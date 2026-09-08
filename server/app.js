@@ -19,20 +19,18 @@ app.use(
       "https://quickpage-orxo.vercel.app",
       "http://quickpage-orxo.domain.gr:5173",
     ],
-  })
+  }),
 );
 
 // routes
 // const productsRoute = require("./routes/products");
 const loginRoute = require("./routes/login");
 const registerRoute = require("./routes/register");
-const adminRoute = require("./routes/tenant-admin");
-const tenantsRoute = require("./routes/tenants");
+const categoriesRoute = require("./routes/categories");
 // const removeMasterMindUserRoute = require("./routes/removemasterminduser");
 // const productRoute = require("./routes/product");
 // const cartRoute = require("./routes/cart");
 // const wishlistResultsRoute = require("./routes/wishlist");
-// const categoriesRoute = require("./routes/categories");
 // const menuRoute = require("./routes/menu");
 // const subCategoriesRoute = require("./routes/subcategories");
 // const brandsRoute = require("./routes/brands");
@@ -58,12 +56,11 @@ const tenantsRoute = require("./routes/tenants");
 // app.use("/api/products", productsRoute);
 app.use("/api/login", loginRoute);
 app.use("/api/register", registerRoute);
-app.use("/api/admin", adminRoute);
-app.use("/api/tenants", tenantsRoute);
+// app.use("/api/admin", adminRoute);
+app.use("/api/categories", categoriesRoute);
 // app.use("/api/product", productRoute);
 // app.use("/api/cart", cartRoute);
 // app.use("/api/wishlist", wishlistResultsRoute);
-// app.use("/api/categories", categoriesRoute);
 // app.use("/api/subcategories", subCategoriesRoute);
 // app.use("/api/brands", brandsRoute);
 // app.use("/api/menu", menuRoute);
@@ -94,7 +91,7 @@ app.use(errorHandler);
 // initial routes
 app.get("/", (req, res) => {
   res.send(
-    "Express is on the way and listening dude....Give me some api routes to resolve! Bit bucket on the run!!!!!!!!"
+    "Express is on the way and listening dude....Give me some api routes to resolve! Bit bucket on the run!!!!!!!!",
   );
 });
 
