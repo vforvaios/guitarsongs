@@ -9,11 +9,7 @@ lerna-debug.log*
 
 client/node_modules
 server/node_modules
-client/dist
 client/dist-ssr
-admin/node_modules
-admin/dist
-admin/dist-ssr
 *.local
 *.env
 client/.env
