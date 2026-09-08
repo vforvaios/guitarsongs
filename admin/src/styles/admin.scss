@@ -1,0 +1,25 @@
+.MuiDrawer-paper {
+  width: 300px;
+  padding: 12px;
+  background-color: var(--admin-dark-blue-color) !important;
+
+  * {
+    color: var(--white-color) !important;
+  }
+}
+
+.admin-menu {
+  li {
+    a,
+    button {
+      display: block;
+      padding: 6px;
+    }
+  }
+
+  .back-to-game {
+    border-radius: 12px;
+    background: var(--white-color);
+    color: var(--admin-dark-blue-color) !important;
+  }
+}

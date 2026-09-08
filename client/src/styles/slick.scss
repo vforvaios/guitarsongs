@@ -1,0 +1,105 @@
+@use "./colors.scss" as *;
+
+.slick-slider {
+  height: 100%;
+}
+
+.slick-slide,
+.slick-list,
+.slick-track {
+  height: 100%;
+}
+
+.slick-slide {
+  > div {
+    height: 100%;
+  }
+}
+
+.slick-prev {
+  left: 240px !important;
+
+  &:before {
+    content: "<";
+  }
+}
+
+.slick-next {
+  right: 240px !important;
+
+  &:before {
+    content: ">";
+  }
+}
+
+.slick-arrow {
+  color: $black !important;
+}
+
+.asNavForClass {
+  justify-content: center;
+  align-items: center;
+
+  .slick-track {
+    width: 100% !important;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    .slick-slide {
+      flex-basis: 15%;
+      width: 50px !important;
+      display: flex;
+      > div {
+        width: 100%;
+      }
+    }
+  }
+
+  .slick-active {
+    .day-of-the-week {
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+      background: $white;
+      border: 1px solid $light-gray;
+
+      &.today {
+        background: $black;
+      }
+
+      &.upper {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    .day-text {
+      font-size: 0.7rem;
+    }
+
+    .day-number {
+      font-size: 1rem;
+    }
+
+    &.slick-current {
+      .day-of-the-week {
+        border-bottom: 1px solid $light-blue;
+
+        .day-number {
+          color: $light-blue;
+        }
+
+        &.today {
+          background: $black;
+          border-bottom: 0;
+          &.upper {
+            .day-number {
+              color: $white;
+            }
+          }
+        }
+      }
+    }
+  }
+}
