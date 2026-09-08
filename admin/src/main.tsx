@@ -2,13 +2,13 @@
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
+import "./tailwind.css";
 import "./styles/colors.scss";
 import "./index.css";
 import "./styles/modal.scss";
 import "./styles/admin.scss";
 import "./styles/table.scss";
 import "./styles/DodgeGame.scss";
-
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
 import store from "./store";
