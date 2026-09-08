@@ -2,6 +2,7 @@
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
+import "./tailwind.css";
 import "./styles/colors.scss";
 import "./index.css";
 import "./styles/modal.scss";
