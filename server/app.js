@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use(
   cors({
     origin: [
-      "https://quickpage-fe.vercel.app",
+      "https://guitarsongs.vercel.app",
       "http://localhost:5173",
       "http://test-1.domain.gr:5173",
       "http://test-2.domain.gr:5173",
