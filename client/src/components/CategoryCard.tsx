@@ -1,15 +1,16 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, GuitarIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CategoryCard = ({ category }: { category: any }) => {
+  const navigate = useNavigate();
+
   return (
-    <button className="category-card">
-      <div
-        className="category-icon"
-        style={{
-          backgroundColor: "#fff",
-        }}
-      >
-        Hi
+    <button
+      className="category-card"
+      onClick={() => navigate(`/categories/${category.id}`)}
+    >
+      <div className="category-icon" style={{ backgroundColor: "#f73a3a" }}>
+        <GuitarIcon />
       </div>
 
       <div className="category-info">

@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppLayout from "./layouts/AppLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
+import Songs from "./components/Songs";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ const App = () => {
           <Routes>
             <Route element={<AppLayout />}>
               <Route index element={<Home />} />
+              <Route index path="/categories/:id" element={<Songs />} />
 
               {/* <Route path="songs">
                 <Route index element={<Songs />} />
