@@ -8,7 +8,6 @@ import "./index.css";
 import "./styles/modal.scss";
 import "./styles/admin.scss";
 import "./styles/table.scss";
-import "./styles/DodgeGame.scss";
 
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
