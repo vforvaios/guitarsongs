@@ -2103,5 +2103,5 @@ self.addEventListener("message", (event) => {
     self.skipWaiting();
   }
 });
-precacheAndRoute([{"revision":"b9e271b3e31ba040ebd05de2da4d9ac0","url":"registerSW.js"},{"revision":"54300f184966bdb38d7b73c9a72b1091","url":"index.html"},{"revision":null,"url":"assets/index-DTWkLoOq.js"},{"revision":null,"url":"assets/index-C5yFuS_I.css"},{"revision":"913255d8aa87451010e3556e0aa88c1a","url":"favicon-192x192.png"},{"revision":"e45b334f7f26e194887bae7d788b1fc6","url":"favicon-512x512.png"},{"revision":"904f1fb2477d9e47520748dae7b4e864","url":"manifest.webmanifest"}].filter(() => false));
+precacheAndRoute([{"revision":"b9e271b3e31ba040ebd05de2da4d9ac0","url":"registerSW.js"},{"revision":"b6471ec8db9a80bc30c65ff66bf9c449","url":"index.html"},{"revision":null,"url":"assets/index-BKBZOMEV.js"},{"revision":null,"url":"assets/index-B0iIOEhN.css"},{"revision":"7deabcfba77e480bca616700eddd1895","url":"favicon-192x192.png"},{"revision":"01c97de3ef75ad0f4e23cf6a626728c5","url":"favicon-512x512.png"},{"revision":"904f1fb2477d9e47520748dae7b4e864","url":"manifest.webmanifest"}].filter(() => false));
 cleanupOutdatedCaches();
