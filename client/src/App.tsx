@@ -7,6 +7,7 @@ import AppLayout from "./layouts/AppLayout";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
 import Songs from "./components/Songs";
+import AdminDashBoard from "./components/AdminDashBoard";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => {
             <Route element={<AppLayout />}>
               <Route index element={<Home />} />
               <Route index path="/categories/:id" element={<Songs />} />
+              <Route index path="/admin" element={<AdminDashBoard />} />
 
               {/* <Route path="songs">
                 <Route index element={<Songs />} />
@@ -32,9 +34,9 @@ const App = () => {
 
             <Route element={<ProtectedRoute />}>
               <Route path="admin" element={<AdminLayout />}>
-                {/* <Route index element={<AdminDashboard />} />
+                {/* <Route index element={<AdminDashBoard />} /> */}
 
-                <Route path="songs">
+                {/* <Route path="songs">
                   <Route index element={<AdminSongs />} />
                   <Route path="new" element={<AdminSongEditor />} />
                   <Route path=":id/edit" element={<AdminSongEditor />} />
