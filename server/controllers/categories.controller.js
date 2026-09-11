@@ -1,6 +1,4 @@
 const db = require("../services/db");
-const config = require("../config");
-const { LOGINSCHEMA } = require("../schemas/loginregister.schema");
 require("dotenv").config();
 
 const getCategories = async (req, res, next) => {
