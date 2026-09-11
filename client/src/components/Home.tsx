@@ -15,9 +15,10 @@ import "../styles/Home.scss";
 import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "@/services/categories";
 import CategoryCard from "./CategoryCard";
+import CategorySkeleton from "./loaders/CategorySkeleton";
 
 export default function Home() {
-  const { data, isError, error } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ["song_categories"],
     queryFn: () => {
       return getCategories();
@@ -115,25 +116,20 @@ export default function Home() {
         {/* Categories */}
 
         <section className="categories-wrapper">
-          <div className="section-heading">
-            <div>
-              <h2>Κατηγορίες</h2>
-              <p>
-                Περιηγήσου στις κατηγορίες και βρες το επόμενο αγαπημένο σου
-                τραγούδι.
-              </p>
-            </div>
-
-            <button className="view-all">
-              Προβολή όλων
-              <ArrowRight size={17} />
-            </button>
-          </div>
-
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "2%" }}>
-            {data?.categories?.map((songCategory: any) => (
-              <CategoryCard key={songCategory.id} category={songCategory} />
-            ))}
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "2%",
+            }}
+          >
+            {isLoading ? (
+              <CategorySkeleton />
+            ) : (
+              data?.categories?.map((songCategory: any) => (
+                <CategoryCard key={songCategory.id} category={songCategory} />
+              ))
+            )}
           </div>
         </section>
       </main>
