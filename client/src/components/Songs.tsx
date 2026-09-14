@@ -76,7 +76,8 @@ export default function Songs() {
               >
                 {/* Information */}
                 <div className="song-row__info">
-                  <h2>{song.title}</h2>
+                  <h2>{song.title}</h2>&nbsp;
+                  <h3>({song.name})</h3>
                 </div>
 
                 <div className="song-row__actions">
