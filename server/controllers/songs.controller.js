@@ -26,10 +26,15 @@ const getSongsByCategory = async (req, res, next) => {
       `
     SELECT
       s.id,
-      s.title
+      s.title,
+      s.artist_id,
+      art.id,
+      art.name 
     FROM SONGS s
     INNER JOIN SONG_CATEGORIES sc
       ON sc.song_id = s.id
+    INNER JOIN ARTISTS art
+      ON art.id = s.artist_id
     WHERE sc.category_id = ?
     ORDER BY s.title
   `,
