@@ -18,11 +18,12 @@ import CategoryCard from "./CategoryCard";
 import CategorySkeleton from "./loaders/CategorySkeleton";
 
 export default function Home() {
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isFetching, isError, error } = useQuery({
     queryKey: ["song_categories"],
     queryFn: () => {
       return getCategories();
     },
+    refetchOnWindowFocus: false,
   });
 
   return (
@@ -123,7 +124,7 @@ export default function Home() {
               gap: "2%",
             }}
           >
-            {isLoading ? (
+            {isFetching ? (
               <CategorySkeleton />
             ) : (
               data?.categories?.map((songCategory: any) => (

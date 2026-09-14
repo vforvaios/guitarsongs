@@ -6,16 +6,17 @@ import SongSkeleton from "./loaders/SongSkeleton";
 
 const Song = () => {
   const songId = useParams().id;
-  const { data, isLoading } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["song_by_id"],
     queryFn: () => {
       return getSongById(Number(songId));
     },
+    refetchOnWindowFocus: false,
   });
 
   return (
     <div>
-      {isLoading ? (
+      {isFetching ? (
         <SongSkeleton />
       ) : (
         <ChordProRenderer

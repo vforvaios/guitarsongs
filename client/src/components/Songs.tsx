@@ -9,11 +9,12 @@ import SongListSkeleton from "./loaders/SongListSkeleton";
 export default function Songs() {
   const categoryId = useParams().id;
   const navigate = useNavigate();
-  const { data, isLoading } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["songs_by_category"],
     queryFn: () => {
       return getSongsByCategory(Number(categoryId));
     },
+    refetchOnWindowFocus: false,
   });
 
   const onBack = () => navigate(`/`);
@@ -64,7 +65,7 @@ export default function Songs() {
 
         {/* Songs */}
         <div className="category-songs__list">
-          {isLoading ? (
+          {isFetching ? (
             <SongListSkeleton />
           ) : (
             data?.songs.map((song: any) => (
