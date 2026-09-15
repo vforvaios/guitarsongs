@@ -5,6 +5,7 @@ import { getSongsByCategory } from "@/services/songs";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import SongListSkeleton from "./loaders/SongListSkeleton";
+import CategorySongsHeaderSkeleton from "./loaders/CategoryHeaderSongListSkeleton";
 
 export default function Songs() {
   const categoryId = useParams().id;
@@ -22,47 +23,49 @@ export default function Songs() {
   return (
     <div className="category-songs">
       {/* Header */}
-      <header className="category-songs__header">
-        <div className="category-songs__header-top">
-          <button
-            className="category-songs__back"
-            onClick={onBack}
-            aria-label="Πίσω"
-          >
-            <ArrowLeft size={22} />
-          </button>
+      {isFetching ? (
+        <CategorySongsHeaderSkeleton />
+      ) : (
+        <header className="category-songs__header">
+          <div className="category-songs__header-top">
+            <button
+              className="category-songs__back"
+              onClick={onBack}
+              aria-label="Πίσω"
+            >
+              <ArrowLeft size={22} />
+            </button>
 
-          <span>Πίσω</span>
+            <span>Πίσω</span>
 
-          <button className="category-songs__more">•••</button>
-        </div>
-
-        <div className="category-songs__title-row">
-          <div>
-            <h1>{data?.categoryName}</h1>
+            <button className="category-songs__more">•••</button>
           </div>
 
-          <div className="category-songs__category-icon">
-            <Music2 size={27} />
-          </div>
-        </div>
+          <div className="category-songs__title-row">
+            <div>
+              <h1>{data?.categoryName}</h1>
+            </div>
 
-        {/* Stats */}
-        <div className="category-songs__stats">
-          <div className="category-songs__stat">
-            <Music2 size={18} />
-
-            <span>
-              <strong>{data?.count}</strong> τραγούδια
-            </span>
+            <div className="category-songs__category-icon">
+              <Music2 size={27} />
+            </div>
           </div>
-        </div>
-      </header>
+
+          {/* Stats */}
+          <div className="category-songs__stats">
+            <div className="category-songs__stat">
+              <Music2 size={18} />
+
+              <span>
+                <strong>{data?.count}</strong> τραγούδια
+              </span>
+            </div>
+          </div>
+        </header>
+      )}
 
       {/* Content */}
       <main className="category-songs__content">
-        {/* Search */}
-
         {/* Songs */}
         <div className="category-songs__list">
           {isFetching ? (
