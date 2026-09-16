@@ -9,6 +9,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import Songs from "./components/Songs";
 import AdminDashBoard from "./components/AdminDashBoard";
 import Song from "./components/Song";
+import ScrollToTop from "./components/utils/ScrollToTop";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -18,12 +19,13 @@ const App = () => {
       <SnackbarProvider />
       <QueryClientProvider client={queryClient}>
         <Router>
+          <ScrollToTop />
           <Routes>
             <Route element={<AppLayout />}>
               <Route index element={<Home />} />
-              <Route index path="/categories/:id" element={<Songs />} />
-              <Route index path="/songs/:id" element={<Song />} />
-              <Route index path="/admin" element={<AdminDashBoard />} />
+              <Route path="/categories/:id" element={<Songs />} />
+              <Route path="/songs/:id" element={<Song />} />
+              <Route path="/admin" element={<AdminDashBoard />} />
 
               {/* <Route path="songs">
                 <Route index element={<Songs />} />
