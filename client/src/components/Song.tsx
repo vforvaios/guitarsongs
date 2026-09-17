@@ -15,7 +15,7 @@ const Song = () => {
   });
 
   return (
-    <div>
+    <div className="song-page">
       {isFetching ? (
         <SongSkeleton />
       ) : (
