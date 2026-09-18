@@ -590,3 +590,9 @@
 .song-page .bg-m3-card {
   background: white;
 }
+
+.song-page {
+  .flex.flex-wrap.items-end.leading-relaxed {
+    margin-bottom: 4px;
+  }
+}
