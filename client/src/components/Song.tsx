@@ -19,11 +19,23 @@ const Song = () => {
       {isFetching ? (
         <SongSkeleton />
       ) : (
-        <ChordProRenderer
-          content={data?.song[0]?.content}
-          showChords={true}
-          instrument="guitar"
-        />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+          className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 bg-slate-50 dark:bg-slate-950 print-page select-text leading-relaxed no-scrollbar relative"
+        >
+          <h2 style={{ fontSize: "25px", fontWeight: 700 }}>
+            {data?.song[0]?.artistName}
+          </h2>
+          <ChordProRenderer
+            content={data?.song[0]?.content}
+            showChords={true}
+            instrument="guitar"
+          />
+        </div>
       )}
     </div>
   );

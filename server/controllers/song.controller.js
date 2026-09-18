@@ -5,11 +5,13 @@ const getSongById = async (req, res, next) => {
   try {
     const [song] = await db.query(
       `SELECT
-            id,
-            title,
-            content
-       FROM SONGS
-       WHERE id = ?`,
+            s.id,
+            s.title,
+            s.content,
+            a.name as artistName
+       FROM SONGS s
+       INNER JOIN ARTISTS a on a.id = s.artist_id
+       WHERE s.id = ?`,
       [req.params.songId],
     );
 
