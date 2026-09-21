@@ -30,6 +30,9 @@ const Song = () => {
           <h2 style={{ fontSize: "25px", fontWeight: 700 }}>
             {data?.song[0]?.artistName}
           </h2>
+          {data?.song[0]?.strumming_pattern ? (
+            <h3>{data?.song[0]?.strumming_pattern}</h3>
+          ) : null}
           <ChordProRenderer
             content={data?.song[0]?.content}
             showChords={true}
