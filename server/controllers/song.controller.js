@@ -8,7 +8,7 @@ const getSongById = async (req, res, next) => {
             s.id,
             s.title,
             s.content,
-            s.strumming_patter,
+            s.strumming_pattern,
             a.name as artistName
        FROM SONGS s
        INNER JOIN ARTISTS a on a.id = s.artist_id
