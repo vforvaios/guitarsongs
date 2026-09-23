@@ -16,14 +16,23 @@ import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "@/services/categories";
 import CategoryCard from "./CategoryCard";
 import CategorySkeleton from "./loaders/CategorySkeleton";
+import { getArtists } from "@/services/artists";
+import { useNavigate } from "react-router-dom";
+import ArtistSelectSkeleton from "./loaders/ArtistSelectSkeleton";
 
 export default function Home() {
+  const navigate = useNavigate();
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ["song_categories"],
     queryFn: () => {
       return getCategories();
     },
     refetchOnWindowFocus: false,
+  });
+
+  const { data: allArtistsData, isFetching: artistsIsFetching } = useQuery({
+    queryKey: ["artists"],
+    queryFn: getArtists,
   });
 
   return (
@@ -133,6 +142,28 @@ export default function Home() {
             )}
           </div>
         </section>
+        {artistsIsFetching ? (
+          <ArtistSelectSkeleton />
+        ) : (
+          <section>
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                if (e.target.value) {
+                  navigate(`/artists/${e.target.value}`);
+                }
+              }}
+            >
+              <option value="">Επιλογή καλλιτέχνη</option>
+
+              {allArtistsData?.artists?.map((artist: any) => (
+                <option key={artist.id} value={artist.id}>
+                  {artist.name}
+                </option>
+              ))}
+            </select>
+          </section>
+        )}
       </main>
 
       {/* ================= MOBILE NAV ================= */}
