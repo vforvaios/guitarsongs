@@ -2,11 +2,12 @@ import { ArrowLeft, ChevronRight, Music2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 
-import { getSongsByArtist } from "@/services/artists";
+import { getArtists, getSongsByArtist } from "@/services/artists";
 
 import "../styles/Songs.scss";
 import SongListSkeleton from "./loaders/SongListSkeleton";
 import CategorySongsHeaderSkeleton from "./loaders/CategoryHeaderSongListSkeleton";
+import ArtistSelectSkeleton from "./loaders/ArtistSelectSkeleton";
 
 export default function ArtistSongs() {
   const artistId = useParams().id;
@@ -18,6 +19,11 @@ export default function ArtistSongs() {
     refetchOnWindowFocus: false,
   });
 
+  const { data: allArtistsData, isFetching: artistsIsFetching } = useQuery({
+    queryKey: ["artists"],
+    queryFn: getArtists,
+  });
+
   const onBack = () => navigate("/");
 
   return (
@@ -25,7 +31,10 @@ export default function ArtistSongs() {
       {isFetching ? (
         <CategorySongsHeaderSkeleton />
       ) : (
-        <header className="category-songs__header">
+        <header
+          className="category-songs__header"
+          style={{ marginBottom: "12px" }}
+        >
           <div className="category-songs__header-top">
             <button
               className="category-songs__back"
@@ -60,7 +69,34 @@ export default function ArtistSongs() {
           </div>
         </header>
       )}
+      {artistsIsFetching ? (
+        <ArtistSelectSkeleton />
+      ) : (
+        <section
+          style={{
+            marginBottom: "24px",
+            marginTop: "24px",
+            textAlign: "center",
+          }}
+        >
+          <select
+            defaultValue=""
+            onChange={(e) => {
+              if (e.target.value) {
+                navigate(`/artists/${e.target.value}`);
+              }
+            }}
+          >
+            <option value="">Επιλογή καλλιτέχνη</option>
 
+            {allArtistsData?.artists?.map((artist: any) => (
+              <option key={artist.id} value={artist.id}>
+                {artist.name}
+              </option>
+            ))}
+          </select>
+        </section>
+      )}
       <main className="category-songs__content">
         <div className="category-songs__list">
           {isFetching ? (
