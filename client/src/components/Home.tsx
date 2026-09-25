@@ -145,23 +145,26 @@ export default function Home() {
         {artistsIsFetching ? (
           <ArtistSelectSkeleton />
         ) : (
-          <section>
-            <select
-              defaultValue=""
-              onChange={(e) => {
-                if (e.target.value) {
-                  navigate(`/artists/${e.target.value}`);
-                }
-              }}
-            >
-              <option value="">Επιλογή καλλιτέχνη</option>
+          <section className="categories-wrapper" style={{ marginTop: "20px" }}>
+            <div className="wrapper-of-artists-select">
+              <select
+                style={{ width: "100%", cursor: "pointer" }}
+                defaultValue=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    navigate(`/artists/${e.target.value}`);
+                  }
+                }}
+              >
+                <option value="">Επιλογή καλλιτέχνη</option>
 
-              {allArtistsData?.artists?.map((artist: any) => (
-                <option key={artist.id} value={artist.id}>
-                  {artist.name}
-                </option>
-              ))}
-            </select>
+                {allArtistsData?.artists?.map((artist: any) => (
+                  <option key={artist.id} value={artist.id}>
+                    {artist.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </section>
         )}
       </main>

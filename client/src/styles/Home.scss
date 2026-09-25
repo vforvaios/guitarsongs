@@ -904,6 +904,15 @@
   }
 }
 
+.wrapper-of-artists-select {
+  display: flex;
+  gap: 2%;
+  border: 1px solid #efe6ff;
+  padding: 8px 12px;
+  width: 98%;
+  margin: 0 auto;
+}
+
 @media (max-width: 420px) {
   .hero h1 {
     font-size: 29px;
