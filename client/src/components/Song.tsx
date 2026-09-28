@@ -73,13 +73,15 @@ const Song = () => {
           </h2>
 
           {data?.song[0]?.strumming_pattern ? (
-            <h3>{data.song[0].strumming_pattern}</h3>
+            <h3 style={{ textAlign: "center" }}>
+              {data.song[0].strumming_pattern}
+            </h3>
           ) : null}
 
           <ChordProRenderer
             content={data?.song[0]?.content}
             showChords={true}
-            instrument="guitar"
+            showDiagrams={false}
           />
         </div>
       )}

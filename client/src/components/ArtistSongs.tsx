@@ -22,6 +22,7 @@ export default function ArtistSongs() {
   const { data: allArtistsData, isFetching: artistsIsFetching } = useQuery({
     queryKey: ["artists"],
     queryFn: getArtists,
+    refetchOnWindowFocus: false,
   });
 
   const onBack = () => navigate("/");

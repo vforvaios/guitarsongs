@@ -2,7 +2,7 @@ import { Skeleton } from "@mui/material";
 
 export default function SongSkeleton() {
   return (
-    <div className="song-page">
+    <div className="song-page skeleton">
       {/* Header */}
       <header className="song-page__header">
         <div className="song-page__header-top">

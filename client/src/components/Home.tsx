@@ -33,6 +33,7 @@ export default function Home() {
   const { data: allArtistsData, isFetching: artistsIsFetching } = useQuery({
     queryKey: ["artists"],
     queryFn: getArtists,
+    refetchOnWindowFocus: false,
   });
 
   return (
