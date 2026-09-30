@@ -7,4 +7,12 @@ const getSongById = (id: number) => {
   return makeRequest({ method: "GET", url: `api/song/${id}` });
 };
 
-export { getSongsByCategory, getSongById };
+const searchSongs = async (body: string) => {
+  return makeRequest({
+    method: "POST",
+    url: `api/songs/search`,
+    body: JSON.stringify({ search: body }),
+  });
+};
+
+export { getSongsByCategory, getSongById, searchSongs };

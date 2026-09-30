@@ -20,6 +20,19 @@
   border-bottom: 1px solid #edf1f5;
   position: relative;
   z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  justify-content: flex-start;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .header-inner {
@@ -146,6 +159,67 @@
 /* =========================================================
    HERO
 ========================================================= */
+.search-view-all {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 14px 16px;
+
+  border: 0;
+  border-top: 1px solid #eeeeee;
+
+  background: #fafafa;
+
+  color: #222;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  &:hover {
+    background: #f2f2f2;
+  }
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-result-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex-grow: 1;
+}
+
+.search-result-item {
+  border-bottom: 1px solid #cecece;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+.search-results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  border-radius: 20px;
+  background: white;
+  overflow: auto;
+  max-height: 400px;
+}
 
 .hero {
   position: relative;
@@ -156,7 +230,7 @@
   background-size: cover;
   background-position: center 58%;
 
-  overflow: hidden;
+  // overflow: hidden;
 }
 
 .hero-overlay {

@@ -12,23 +12,55 @@ import {
 } from "lucide-react";
 
 import "../styles/Home.scss";
+
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+
 import { getCategories } from "@/services/categories";
+import { getArtists } from "@/services/artists";
+import { searchSongs } from "@/services/songs";
+
 import CategoryCard from "./CategoryCard";
 import CategorySkeleton from "./loaders/CategorySkeleton";
-import { getArtists } from "@/services/artists";
-import { useNavigate } from "react-router-dom";
 import ArtistSelectSkeleton from "./loaders/ArtistSelectSkeleton";
 
+import { useDebounce } from "@/hooks/useDebounce";
+
 export default function Home() {
+  const searchContainerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  const [search, setSearch] = useState("");
+
+  const debouncedSearch = useDebounce(search, 300);
+
+  // -----------------------------
+  // Categories
+  // -----------------------------
+
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ["song_categories"],
-    queryFn: () => {
-      return getCategories();
-    },
+    queryFn: getCategories,
     refetchOnWindowFocus: false,
   });
+
+  // -----------------------------
+  // Search
+  // -----------------------------
+
+  const { data: searchResults, isFetching: searchResultsIsFetching } = useQuery(
+    {
+      queryKey: ["songs_search", debouncedSearch],
+      queryFn: () => searchSongs(debouncedSearch),
+      enabled: debouncedSearch.trim().length >= 2,
+      refetchOnWindowFocus: false,
+    },
+  );
+
+  // -----------------------------
+  // Artists
+  // -----------------------------
 
   const { data: allArtistsData, isFetching: artistsIsFetching } = useQuery({
     queryKey: ["artists"],
@@ -36,59 +68,79 @@ export default function Home() {
     refetchOnWindowFocus: false,
   });
 
+  // -----------------------------
+  // Search handlers
+  // -----------------------------
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(event.target.value);
+  };
+
+  const handleSearchSubmit = () => {
+    const query = search.trim();
+
+    if (query.length < 2) {
+      return;
+    }
+
+    navigate(`/search?q=${encodeURIComponent(query)}`);
+  };
+
+  const handleSearchResultClick = (songId: number) => {
+    setSearch("");
+    navigate(`/songs/${songId}`);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setSearch("");
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSearch("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  // -----------------------------
+  // Render
+  // -----------------------------
+
   return (
     <div className="songbook-page">
-      {/* ================= HEADER ================= */}
+      {/* --------------------------------
+          Header
+      -------------------------------- */}
 
       <header className="top-header">
-        <div className="header-inner">
-          <a className="logo">
-            <div className="logo-icon">
-              <Guitar size={27} />
-            </div>
+        <div className="top-header__logo">
+          <Guitar size={24} />
 
-            <span>SongBook</span>
-          </a>
-
-          <nav className="desktop-navigation">
-            <a className="nav-item active">
-              <HomeIcon size={19} />
-              <span>Αρχική</span>
-            </a>
-
-            <a className="nav-item">
-              <Music2 size={19} />
-              <span>Τραγούδια</span>
-            </a>
-
-            <a className="nav-item">
-              <Heart size={19} />
-              <span>Αγαπημένα</span>
-            </a>
-
-            <a className="nav-item">
-              <List size={19} />
-              <span>Λίστες</span>
-            </a>
-          </nav>
-
-          <div className="header-actions">
-            <button className="icon-button">
-              <Settings size={21} />
-            </button>
-
-            <button className="profile-button">
-              <User size={20} />
-            </button>
-
-            <button className="mobile-menu-button">
-              <Menu size={23} />
-            </button>
-          </div>
+          <span>SongBook</span>
         </div>
+
+        <button className="top-header__menu" type="button" aria-label="Menu">
+          <Menu size={22} />
+        </button>
       </header>
 
-      {/* ================= HERO ================= */}
+      {/* --------------------------------
+          Hero
+      -------------------------------- */}
 
       <section className="hero">
         <div className="hero-overlay" />
@@ -108,23 +160,78 @@ export default function Home() {
             Όλη η μουσική που αγαπάς, σε ένα μέρος.
           </p>
 
-          <div className="search-container">
+          {/* --------------------------------
+              Search
+          -------------------------------- */}
+
+          <div className="search-container" ref={searchContainerRef}>
             <Search size={21} />
 
             <input
               type="text"
-              placeholder="Αναζήτησε τραγούδι, καλλιτέχνη, κατηγορία..."
+              placeholder="Αναζήτησε τραγούδι..."
+              value={search}
+              onChange={handleSearchChange}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleSearchSubmit();
+                }
+
+                if (event.key === "Escape") {
+                  setSearch("");
+                }
+              }}
             />
 
-            <button>Αναζήτηση</button>
+            {/* --------------------------------
+                Search dropdown
+            -------------------------------- */}
+
+            {search.trim().length >= 2 && (
+              <div className="search-results">
+                {searchResultsIsFetching ? (
+                  <div className="search-result-loading">Αναζήτηση...</div>
+                ) : searchResults?.songs?.length > 0 ? (
+                  <>
+                    {searchResults.songs.map((song: any) => (
+                      <div
+                        key={song.id}
+                        className="search-result-item"
+                        onClick={() => handleSearchResultClick(song.id)}
+                      >
+                        <div className="search-result-icon">
+                          <Music2 size={18} />
+                        </div>
+
+                        <div className="search-result-info">
+                          <strong>{song.title}</strong>
+
+                          {song.artist_name && <span>{song.artist_name}</span>}
+                        </div>
+
+                        <ArrowRight size={18} />
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <div className="search-result-empty">
+                    Δεν βρέθηκαν τραγούδια
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      {/* ================= MAIN ================= */}
+      {/* --------------------------------
+          Main content
+      -------------------------------- */}
 
       <main className="main-content">
-        {/* Categories */}
+        {/* --------------------------------
+            Categories
+        -------------------------------- */}
 
         <section className="categories-wrapper">
           <div
@@ -136,6 +243,8 @@ export default function Home() {
           >
             {isFetching ? (
               <CategorySkeleton />
+            ) : isError ? (
+              <div>Δεν ήταν δυνατή η φόρτωση των κατηγοριών.</div>
             ) : (
               data?.categories?.map((songCategory: any) => (
                 <CategoryCard key={songCategory.id} category={songCategory} />
@@ -143,17 +252,32 @@ export default function Home() {
             )}
           </div>
         </section>
+
+        {/* --------------------------------
+            Artists
+        -------------------------------- */}
+
         {artistsIsFetching ? (
           <ArtistSelectSkeleton />
         ) : (
-          <section className="categories-wrapper" style={{ marginTop: "20px" }}>
+          <section
+            className="categories-wrapper"
+            style={{
+              marginTop: "20px",
+            }}
+          >
             <div className="wrapper-of-artists-select">
               <select
-                style={{ width: "100%", cursor: "pointer" }}
+                style={{
+                  width: "100%",
+                  cursor: "pointer",
+                }}
                 defaultValue=""
-                onChange={(e) => {
-                  if (e.target.value) {
-                    navigate(`/artists/${e.target.value}`);
+                onChange={(event) => {
+                  const artistId = event.target.value;
+
+                  if (artistId) {
+                    navigate(`/artists/${artistId}`);
                   }
                 }}
               >
@@ -170,33 +294,40 @@ export default function Home() {
         )}
       </main>
 
-      {/* ================= MOBILE NAV ================= */}
+      {/* --------------------------------
+          Mobile bottom navigation
+      -------------------------------- */}
 
       <nav className="mobile-bottom-navigation">
-        <a className="mobile-nav-item active">
-          <HomeIcon size={21} />
+        <button type="button" onClick={() => navigate("/")}>
+          <HomeIcon size={20} />
+
           <span>Αρχική</span>
-        </a>
+        </button>
 
-        <a className="mobile-nav-item">
-          <Music2 size={21} />
-          <span>Τραγούδια</span>
-        </a>
+        <button type="button" onClick={() => navigate("/favorites")}>
+          <Heart size={20} />
 
-        <a className="mobile-nav-item">
-          <Heart size={21} />
           <span>Αγαπημένα</span>
-        </a>
+        </button>
 
-        <a className="mobile-nav-item">
-          <List size={21} />
+        <button type="button" onClick={() => navigate("/setlists")}>
+          <List size={20} />
+
           <span>Λίστες</span>
-        </a>
+        </button>
 
-        <a className="mobile-nav-item">
-          <Menu size={21} />
-          <span>Περισσότερα</span>
-        </a>
+        <button type="button" onClick={() => navigate("/profile")}>
+          <User size={20} />
+
+          <span>Προφίλ</span>
+        </button>
+
+        <button type="button" onClick={() => navigate("/settings")}>
+          <Settings size={20} />
+
+          <span>Ρυθμίσεις</span>
+        </button>
       </nav>
     </div>
   );
