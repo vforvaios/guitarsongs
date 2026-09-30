@@ -37,8 +37,6 @@ export default function Songs() {
             </button>
 
             <span>Πίσω</span>
-
-            <button className="category-songs__more">•••</button>
           </div>
 
           <div className="category-songs__title-row">
