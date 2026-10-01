@@ -11,6 +11,7 @@ import AdminDashBoard from "./components/AdminDashBoard";
 import Song from "./components/Song";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import ArtistSongs from "./components/ArtistSongs";
+import Header from "./components/Header";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => {
       <SnackbarProvider />
       <QueryClientProvider client={queryClient}>
         <Router>
+          <Header />
           <ScrollToTop />
           <Routes>
             <Route element={<AppLayout />}>

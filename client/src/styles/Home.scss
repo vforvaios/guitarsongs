@@ -21,7 +21,7 @@
   position: relative;
   z-index: 10;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
@@ -33,6 +33,14 @@
   justify-content: flex-start;
   font-size: 24px;
   font-weight: bold;
+  cursor: pointer;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
 }
 
 .header-inner {

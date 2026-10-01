@@ -1,15 +1,4 @@
-import {
-  ArrowRight,
-  Heart,
-  Home as HomeIcon,
-  List,
-  Menu,
-  Music2,
-  Search,
-  Settings,
-  User,
-  Guitar,
-} from "lucide-react";
+import { ArrowRight, Music2, Search } from "lucide-react";
 
 import "../styles/Home.scss";
 
@@ -122,22 +111,6 @@ export default function Home() {
 
   return (
     <div className="songbook-page">
-      {/* --------------------------------
-          Header
-      -------------------------------- */}
-
-      <header className="top-header">
-        <div className="top-header__logo">
-          <Guitar size={24} />
-
-          <span>SongBook</span>
-        </div>
-
-        <button className="top-header__menu" type="button" aria-label="Menu">
-          <Menu size={22} />
-        </button>
-      </header>
-
       {/* --------------------------------
           Hero
       -------------------------------- */}
