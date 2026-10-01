@@ -5,26 +5,22 @@ import { useParams } from "react-router-dom";
 import SongSkeleton from "./loaders/SongSkeleton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useChordAudio from "@/hooks/useChordAudio";
-import { Minus, Pause, Play, Plus } from "lucide-react";
+import { ArrowLeft, Minus, Pause, Play, Plus } from "lucide-react";
 
 const MIN_SCROLL_SPEED = 1;
 const MAX_SCROLL_SPEED = 10;
-
-// Pixels / second ανά speed level
 
 const Song = () => {
   const chordContainerRef = useRef<HTMLDivElement | null>(null);
 
   const animationFrameRef = useRef<number | null>(null);
-
   const lastFrameTimeRef = useRef<number | null>(null);
-
   const scrollSpeedRef = useRef(3);
+  const scrollPositionRef = useRef(0);
 
   const songId = useParams().id;
 
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
-
   const [scrollSpeed, setScrollSpeed] = useState(3);
 
   const { data, isFetching } = useQuery({
@@ -82,7 +78,6 @@ const Song = () => {
 
     if (animationFrameRef.current !== null) {
       cancelAnimationFrame(animationFrameRef.current);
-
       animationFrameRef.current = null;
     }
 
@@ -92,7 +87,7 @@ const Song = () => {
   // --------------------------------------------------
   // Start auto scroll
   // --------------------------------------------------
-  const scrollPositionRef = useRef(0);
+
   const startAutoScroll = useCallback(() => {
     if (animationFrameRef.current !== null) {
       return;
@@ -161,7 +156,7 @@ const Song = () => {
       // Κρατάμε δεκαδική θέση
       scrollPositionRef.current += pixelsToScroll;
 
-      // Το browser παίρνει την rounded θέση
+      // Κάνουμε το πραγματικό scroll
       window.scrollTo(0, Math.min(scrollPositionRef.current, maxScroll));
 
       animationFrameRef.current = requestAnimationFrame(scroll);
@@ -217,7 +212,6 @@ const Song = () => {
       }
 
       animationFrameRef.current = null;
-
       lastFrameTimeRef.current = null;
     };
   }, []);
@@ -236,6 +230,41 @@ const Song = () => {
           className="px-4 py-4 sm:px-6 bg-slate-50 dark:bg-slate-950 print-page select-text leading-relaxed no-scrollbar relative"
         >
           {/* ----------------------------------------
+              Back
+          ---------------------------------------- */}
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              marginBottom: "12px",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => window.history.back()}
+              aria-label="Πίσω"
+              style={{
+                width: "40px",
+                height: "40px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "none",
+                borderRadius: "8px",
+                background: "#f1f5f9",
+                color: "#111827",
+                cursor: "pointer",
+              }}
+            >
+              <ArrowLeft size={22} />
+            </button>
+
+            <span>Πίσω</span>
+          </div>
+
+          {/* ----------------------------------------
               Auto scroll controls
           ---------------------------------------- */}
 
@@ -245,20 +274,15 @@ const Song = () => {
               top: "16px",
               right: "6px",
               zIndex: 1000,
-
               display: "flex",
               alignItems: "center",
               gap: "6px",
-
               padding: "6px",
-
               borderRadius: "12px",
-
               background: "rgba(255, 255, 255, 0.95)",
-
               boxShadow: "0 4px 16px rgba(0, 0, 0, 0.15)",
-
               backdropFilter: "blur(8px)",
+              opacity: 0.6,
             }}
           >
             {/* Play / Pause */}
@@ -274,18 +298,13 @@ const Song = () => {
               style={{
                 width: "40px",
                 height: "40px",
-
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-
                 border: "none",
                 borderRadius: "8px",
-
                 background: isAutoScrolling ? "#dc2626" : "#111827",
-
                 color: "#fff",
-
                 cursor: "pointer",
               }}
             >
@@ -302,19 +321,14 @@ const Song = () => {
               style={{
                 width: "32px",
                 height: "32px",
-
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-
                 border: "none",
                 borderRadius: "7px",
-
                 background: "#f1f5f9",
-
                 cursor:
                   scrollSpeed <= MIN_SCROLL_SPEED ? "not-allowed" : "pointer",
-
                 opacity: scrollSpeed <= MIN_SCROLL_SPEED ? 0.4 : 1,
               }}
             >
@@ -327,10 +341,8 @@ const Song = () => {
               style={{
                 minWidth: "28px",
                 textAlign: "center",
-
                 fontSize: "13px",
                 fontWeight: 700,
-
                 color: "#111827",
               }}
             >
@@ -347,19 +359,14 @@ const Song = () => {
               style={{
                 width: "32px",
                 height: "32px",
-
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-
                 border: "none",
                 borderRadius: "7px",
-
                 background: "#f1f5f9",
-
                 cursor:
                   scrollSpeed >= MAX_SCROLL_SPEED ? "not-allowed" : "pointer",
-
                 opacity: scrollSpeed >= MAX_SCROLL_SPEED ? 0.4 : 1,
               }}
             >
@@ -377,6 +384,7 @@ const Song = () => {
               fontWeight: 700,
               textAlign: "center",
               paddingRight: "160px",
+              paddingLeft: "46px",
             }}
           >
             {data?.song[0]?.artistName}

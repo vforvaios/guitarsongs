@@ -293,42 +293,6 @@ export default function Home() {
           </section>
         )}
       </main>
-
-      {/* --------------------------------
-          Mobile bottom navigation
-      -------------------------------- */}
-
-      <nav className="mobile-bottom-navigation">
-        <button type="button" onClick={() => navigate("/")}>
-          <HomeIcon size={20} />
-
-          <span>Αρχική</span>
-        </button>
-
-        <button type="button" onClick={() => navigate("/favorites")}>
-          <Heart size={20} />
-
-          <span>Αγαπημένα</span>
-        </button>
-
-        <button type="button" onClick={() => navigate("/setlists")}>
-          <List size={20} />
-
-          <span>Λίστες</span>
-        </button>
-
-        <button type="button" onClick={() => navigate("/profile")}>
-          <User size={20} />
-
-          <span>Προφίλ</span>
-        </button>
-
-        <button type="button" onClick={() => navigate("/settings")}>
-          <Settings size={20} />
-
-          <span>Ρυθμίσεις</span>
-        </button>
-      </nav>
     </div>
   );
 }
