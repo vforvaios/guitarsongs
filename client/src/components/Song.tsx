@@ -11,7 +11,6 @@ const MIN_SCROLL_SPEED = 1;
 const MAX_SCROLL_SPEED = 10;
 
 // Pixels / second ανά speed level
-const PIXELS_PER_SECOND = 15;
 
 const Song = () => {
   const chordContainerRef = useRef<HTMLDivElement | null>(null);
@@ -93,19 +92,48 @@ const Song = () => {
   // --------------------------------------------------
   // Start auto scroll
   // --------------------------------------------------
-
+  const scrollPositionRef = useRef(0);
   const startAutoScroll = useCallback(() => {
-    // Μην ξεκινήσεις δεύτερο animation
     if (animationFrameRef.current !== null) {
       return;
     }
 
     setIsAutoScrolling(true);
 
+    const currentScroll = window.scrollY;
+
+    // Ξεκινάμε από την πραγματική θέση
+    scrollPositionRef.current = currentScroll;
     lastFrameTimeRef.current = null;
 
+    const getScrollSpeed = (speed: number) => {
+      switch (speed) {
+        case 1:
+          return 20;
+        case 2:
+          return 40;
+        case 3:
+          return 70;
+        case 4:
+          return 110;
+        case 5:
+          return 160;
+        case 6:
+          return 220;
+        case 7:
+          return 300;
+        case 8:
+          return 400;
+        case 9:
+          return 520;
+        case 10:
+          return 650;
+        default:
+          return 20;
+      }
+    };
+
     const scroll = (timestamp: number) => {
-      // Πρώτο frame
       if (lastFrameTimeRef.current === null) {
         lastFrameTimeRef.current = timestamp;
       }
@@ -114,32 +142,27 @@ const Song = () => {
 
       lastFrameTimeRef.current = timestamp;
 
-      // Συνολικό ύψος της σελίδας
       const documentHeight = document.documentElement.scrollHeight;
 
-      // Ύψος viewport
       const viewportHeight = window.innerHeight;
 
-      // Πόσο μπορούμε ακόμα να κάνουμε scroll
       const maxScroll = documentHeight - viewportHeight;
 
-      // Τρέχουσα θέση
-      const currentScroll = window.scrollY;
-
-      // Έφτασε στο τέλος
-      if (currentScroll >= maxScroll - 1) {
+      if (scrollPositionRef.current >= maxScroll) {
+        window.scrollTo(0, maxScroll);
         stopAutoScroll();
         return;
       }
 
-      // Pixels ανά δευτερόλεπτο
-      const pixelsPerSecond = scrollSpeedRef.current * PIXELS_PER_SECOND;
+      const pixelsPerSecond = getScrollSpeed(scrollSpeedRef.current);
 
-      // Πόσα pixels πρέπει να κινηθούμε
-      // σε αυτό το frame
       const pixelsToScroll = (pixelsPerSecond * deltaTime) / 1000;
 
-      window.scrollBy(0, pixelsToScroll);
+      // Κρατάμε δεκαδική θέση
+      scrollPositionRef.current += pixelsToScroll;
+
+      // Το browser παίρνει την rounded θέση
+      window.scrollTo(0, Math.min(scrollPositionRef.current, maxScroll));
 
       animationFrameRef.current = requestAnimationFrame(scroll);
     };
