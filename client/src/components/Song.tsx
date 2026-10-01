@@ -383,8 +383,6 @@ const Song = () => {
               fontSize: "25px",
               fontWeight: 700,
               textAlign: "center",
-              paddingRight: "160px",
-              paddingLeft: "46px",
             }}
           >
             {data?.song[0]?.artistName}
