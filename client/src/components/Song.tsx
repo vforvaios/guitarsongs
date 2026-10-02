@@ -271,7 +271,7 @@ const Song = () => {
           <div
             style={{
               position: "fixed",
-              top: "16px",
+              bottom: "10px",
               right: "6px",
               zIndex: 1000,
               display: "flex",
