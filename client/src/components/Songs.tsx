@@ -20,7 +20,7 @@ export default function Songs() {
       return getSongsByCategory(Number(categoryId));
     },
     refetchOnWindowFocus: false,
-  });``
+  });
 
   const filteredSongs = useMemo(() => {
     if (!data?.songs) return [];
