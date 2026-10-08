@@ -33,6 +33,7 @@ const CHORDS: Record<string, string[]> = {
 
   B: ["B2", "F#3", "B3", "D#4", "F#4"],
   Bm: ["B2", "F#3", "B3", "D4", "F#4"],
+  B7: ["B2", "F#3", "B3", "D#4", "F#4", "A4"],
 };
 
 const useChordAudio = () => {
