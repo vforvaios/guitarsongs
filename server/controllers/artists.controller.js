@@ -30,10 +30,16 @@ const getArtistsSongsById = async (req, res, next) => {
       s.id,
       s.title,
       s.artist_id,
-      art.name AS artist_name
+      art.name AS artist_name,
+      CASE
+          WHEN f.song_id IS NOT NULL THEN 1
+          ELSE 0
+        END AS is_favorite
     FROM SONGS s
     INNER JOIN ARTISTS art
       ON art.id = s.artist_id
+    LEFT JOIN FAVORITE_SONGS f
+      ON f.song_id = s.id
     WHERE art.id = ?
     ORDER BY s.title
       `,

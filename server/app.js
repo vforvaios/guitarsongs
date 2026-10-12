@@ -30,6 +30,7 @@ const categoriesRoute = require("./routes/categories");
 const songsRoute = require("./routes/songs");
 const songRoute = require("./routes/song");
 const artistsRoute = require("./routes/artists");
+const favoritesRoute = require("./routes/favorites");
 
 // app.use("/api/products", productsRoute);
 app.use("/api/login", loginRoute);
@@ -38,6 +39,7 @@ app.use("/api/categories", categoriesRoute);
 app.use("/api/songs", songsRoute);
 app.use("/api/song", songRoute);
 app.use("/api/artists", artistsRoute);
+app.use("/api/favorites", favoritesRoute);
 
 app.use(errorHandler);
 

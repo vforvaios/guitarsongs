@@ -1,11 +1,20 @@
 import { getSongById } from "@/services/songs";
 import ChordProRenderer from "@hosanna/chordpro/renderer";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import SongSkeleton from "./loaders/SongSkeleton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useChordAudio from "@/hooks/useChordAudio";
-import { ArrowLeft, Minus, Pause, Play, Plus } from "lucide-react";
+import {
+  ArrowLeft,
+  Heart,
+  Loader,
+  Minus,
+  Pause,
+  Play,
+  Plus,
+} from "lucide-react";
+import { addFavorite, removeFavorite } from "@/services/favorites";
 
 const MIN_SCROLL_SPEED = 1;
 const MAX_SCROLL_SPEED = 10;
@@ -19,6 +28,7 @@ const Song = () => {
   const scrollPositionRef = useRef(0);
 
   const songId = useParams().id;
+  const queryClient = useQueryClient();
 
   const [isAutoScrolling, setIsAutoScrolling] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(3);
@@ -27,6 +37,30 @@ const Song = () => {
     queryKey: ["song_by_id", songId],
     queryFn: () => getSongById(Number(songId)),
     refetchOnWindowFocus: false,
+  });
+
+  const { mutate: addToFavorites, isPending: isPendingAddToFavorites } =
+    useMutation({
+      mutationKey: ["add-to-favorites"],
+      mutationFn: (songId: number) => {
+        return addFavorite(Number(songId));
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["song_by_id"] });
+      },
+    });
+
+  const {
+    mutate: removeFromFavorites,
+    isPending: isPendingRemoveFromFavorites,
+  } = useMutation({
+    mutationKey: ["remove-from-favorites"],
+    mutationFn: (songId: number) => {
+      return removeFavorite(Number(songId));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["song_by_id"] });
+    },
   });
 
   const { playChord, loading } = useChordAudio();
@@ -199,6 +233,14 @@ const Song = () => {
 
       return newSpeed;
     });
+  };
+
+  const handleAddToFavorites = (songId: number) => {
+    addToFavorites(songId);
+  };
+
+  const handleRemoveFromFavorites = (songId: number) => {
+    removeFromFavorites(songId);
   };
 
   // --------------------------------------------------
@@ -387,6 +429,36 @@ const Song = () => {
           >
             {data?.song[0]?.artistName}
           </h2>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "6px",
+              marginTop: "6px",
+            }}
+          >
+            {isPendingAddToFavorites || isPendingRemoveFromFavorites ? (
+              <Loader size={20} className="animate-spin" />
+            ) : data?.song[0]?.is_favorite === 1 ? (
+              <Heart
+                style={{ cursor: "pointer" }}
+                fill="red"
+                color="red"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleRemoveFromFavorites(data?.song[0]?.id);
+                }}
+              />
+            ) : (
+              <Heart
+                style={{ cursor: "pointer" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToFavorites(data?.song[0]?.id);
+                }}
+              />
+            )}
+          </div>
 
           {data?.song[0]?.strumming_pattern ? (
             <h3

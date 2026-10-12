@@ -1,14 +1,24 @@
-import { ArrowLeft, ChevronRight, Music2, Search, X } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronRight,
+  Music2,
+  Search,
+  X,
+  Heart,
+  Loader,
+} from "lucide-react";
 
 import "../styles/Songs.scss";
 import { getSongsByCategory } from "@/services/songs";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import { useMemo, useState } from "react";
 import SongListSkeleton from "./loaders/SongListSkeleton";
 import CategorySongsHeaderSkeleton from "./loaders/CategoryHeaderSongListSkeleton";
+import { addFavorite, removeFavorite } from "@/services/favorites";
 
 export default function Songs() {
+  const queryClient = useQueryClient();
   const categoryId = useParams().id;
   const navigate = useNavigate();
 
@@ -20,6 +30,30 @@ export default function Songs() {
       return getSongsByCategory(Number(categoryId));
     },
     refetchOnWindowFocus: false,
+  });
+
+  const { mutate: addToFavorites, isPending: isPendingAddToFavorites } =
+    useMutation({
+      mutationKey: ["add-to-favorites"],
+      mutationFn: (songId: number) => {
+        return addFavorite(Number(songId));
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["songs_by_category"] });
+      },
+    });
+
+  const {
+    mutate: removeFromFavorites,
+    isPending: isPendingRemoveFromFavorites,
+  } = useMutation({
+    mutationKey: ["remove-from-favorites"],
+    mutationFn: (songId: number) => {
+      return removeFavorite(Number(songId));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["songs_by_category"] });
+    },
   });
 
   const filteredSongs = useMemo(() => {
@@ -38,6 +72,14 @@ export default function Songs() {
       return title.includes(searchTerm) || artist.includes(searchTerm);
     });
   }, [data?.songs, search]);
+
+  const handleAddToFavorites = (songId: number) => {
+    addToFavorites(songId);
+  };
+
+  const handleRemoveFromFavorites = (songId: number) => {
+    removeFromFavorites(songId);
+  };
 
   const onBack = () => navigate("/");
 
@@ -118,6 +160,27 @@ export default function Songs() {
                 className="song-row"
                 onClick={() => navigate(`/songs/${song.id}`)}
               >
+                <div className="song-row__favorite">
+                  {isPendingAddToFavorites || isPendingRemoveFromFavorites ? (
+                    <Loader size={20} className="animate-spin" />
+                  ) : song.is_favorite === 1 ? (
+                    <Heart
+                      fill="red"
+                      color="red"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFromFavorites(song.id);
+                      }}
+                    />
+                  ) : (
+                    <Heart
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToFavorites(song.id);
+                      }}
+                    />
+                  )}
+                </div>
                 <div className="song-row__info">
                   <h2>{song.title}</h2>
                   <h3>({song.artist_name})</h3>

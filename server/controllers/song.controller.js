@@ -9,10 +9,16 @@ const getSongById = async (req, res, next) => {
             s.title,
             s.content,
             s.strumming_pattern,
-            a.name as artistName
+            a.name as artistName,
+            CASE
+              WHEN f.song_id IS NOT NULL THEN 1
+              ELSE 0
+            END AS is_favorite
        FROM SONGS s
        INNER JOIN ARTISTS a on a.id = s.artist_id
-       WHERE s.id = ?`,
+      LEFT JOIN FAVORITE_SONGS f
+       ON f.song_id = s.id
+      WHERE s.id = ?`,
       [req.params.songId],
     );
 

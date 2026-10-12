@@ -28,15 +28,21 @@ const getSongsByCategory = async (req, res, next) => {
       s.id,
       s.title,
       s.artist_id,
-      art.name AS artist_name
+      art.name AS artist_name,
+      CASE
+        WHEN f.song_id IS NOT NULL THEN 1
+        ELSE 0
+      END AS is_favorite
     FROM SONGS s
     INNER JOIN SONG_CATEGORIES sc
       ON sc.song_id = s.id
     INNER JOIN ARTISTS art
       ON art.id = s.artist_id
+    LEFT JOIN FAVORITE_SONGS f
+      ON f.song_id = s.id
     WHERE sc.category_id = ?
     ORDER BY s.title
-  `,
+    `,
       [categoryId],
     );
 
@@ -70,9 +76,16 @@ const searchSongs = async (req, res, next) => {
         s.id,
         s.title,
         a.id AS artist_id,
-        a.name AS artist_name
+        a.name AS artist_name,
+        CASE
+          WHEN f.song_id IS NOT NULL THEN 1
+          ELSE 0
+        END AS is_favorite
       FROM SONGS s
-      LEFT JOIN ARTISTS a ON a.id = s.artist_id
+      LEFT JOIN ARTISTS a
+        ON a.id = s.artist_id
+      LEFT JOIN FAVORITE_SONGS f
+        ON f.song_id = s.id
       WHERE s.title LIKE ?
       ORDER BY s.title
       `,
