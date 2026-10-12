@@ -8,7 +8,11 @@ const getFavorites = async (req, res, next) => {
         s.id,
         s.title,
         a.name AS artist_name,
-        f.created_at
+        f.created_at,
+        CASE
+        WHEN f.song_id IS NOT NULL THEN 1
+        ELSE 0
+      END AS is_favorite
       FROM FAVORITE_SONGS f
       INNER JOIN SONGS s ON s.id = f.song_id
       LEFT JOIN ARTISTS a ON a.id = s.artist_id
@@ -16,7 +20,7 @@ const getFavorites = async (req, res, next) => {
     `);
 
     res.status(200).json({
-      favorites,
+      songs: favorites,
       count: favorites.length,
     });
   } catch (error) {

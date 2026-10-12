@@ -15,7 +15,11 @@ import { useNavigate, useParams } from "react-router";
 import { useMemo, useState } from "react";
 import SongListSkeleton from "./loaders/SongListSkeleton";
 import CategorySongsHeaderSkeleton from "./loaders/CategoryHeaderSongListSkeleton";
-import { addFavorite, removeFavorite } from "@/services/favorites";
+import {
+  addFavorite,
+  getFavorites,
+  removeFavorite,
+} from "@/services/favorites";
 
 export default function Songs() {
   const queryClient = useQueryClient();
@@ -27,7 +31,9 @@ export default function Songs() {
   const { data, isFetching } = useQuery({
     queryKey: ["songs_by_category", categoryId],
     queryFn: () => {
-      return getSongsByCategory(Number(categoryId));
+      return categoryId !== "-1"
+        ? getSongsByCategory(Number(categoryId))
+        : getFavorites();
     },
     refetchOnWindowFocus: false,
   });
@@ -104,7 +110,7 @@ export default function Songs() {
 
           <div className="category-songs__title-row">
             <div>
-              <h1>{data?.categoryName}</h1>
+              <h1>{data?.categoryName ?? "ΑΓΑΠΗΜENA"}</h1>
             </div>
 
             <div className="category-songs__category-icon">

@@ -15,6 +15,7 @@ import CategorySkeleton from "./loaders/CategorySkeleton";
 import ArtistSelectSkeleton from "./loaders/ArtistSelectSkeleton";
 
 import { useDebounce } from "@/hooks/useDebounce";
+import { getFavorites } from "@/services/favorites";
 
 export default function Home() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -31,6 +32,12 @@ export default function Home() {
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ["song_categories"],
     queryFn: getCategories,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: favoritesData } = useQuery({
+    queryKey: ["favorite_songs"],
+    queryFn: getFavorites,
     refetchOnWindowFocus: false,
   });
 
@@ -222,6 +229,16 @@ export default function Home() {
               data?.categories?.map((songCategory: any) => (
                 <CategoryCard key={songCategory.id} category={songCategory} />
               ))
+            )}
+            {favoritesData?.count && (
+              <CategoryCard
+                key="favorites_list"
+                category={{
+                  name: "ΑΓΑΠΗΜΕΝΑ",
+                  id: -1,
+                  songCount: favoritesData?.count,
+                }}
+              />
             )}
           </div>
         </section>
