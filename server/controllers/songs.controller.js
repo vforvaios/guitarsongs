@@ -28,6 +28,7 @@ const getSongsByCategory = async (req, res, next) => {
       s.id,
       s.title,
       s.artist_id,
+      s.created_at,
       art.name AS artist_name,
       CASE
         WHEN f.song_id IS NOT NULL THEN 1

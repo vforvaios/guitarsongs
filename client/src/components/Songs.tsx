@@ -21,12 +21,15 @@ import {
   removeFavorite,
 } from "@/services/favorites";
 
+type SortOption = "title-asc" | "title-desc" | "date-asc" | "date-desc";
+
 export default function Songs() {
   const queryClient = useQueryClient();
   const categoryId = useParams().id;
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("title-asc");
 
   const { data, isFetching } = useQuery({
     queryKey: ["songs_by_category", categoryId],
@@ -67,17 +70,36 @@ export default function Songs() {
 
     const searchTerm = search.trim().toLowerCase();
 
-    if (!searchTerm) {
-      return data.songs;
-    }
-
-    return data.songs.filter((song: any) => {
+    const songs = data.songs.filter((song: any) => {
       const title = song.title?.toLowerCase() ?? "";
       const artist = song.artist_name?.toLowerCase() ?? "";
 
       return title.includes(searchTerm) || artist.includes(searchTerm);
     });
-  }, [data?.songs, search]);
+
+    return [...songs].sort((a: any, b: any) => {
+      switch (sortBy) {
+        case "title-asc":
+          return a.title.localeCompare(b.title, "el");
+
+        case "title-desc":
+          return b.title.localeCompare(a.title, "el");
+
+        case "date-asc":
+          return (
+            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          );
+
+        case "date-desc":
+          return (
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+
+        default:
+          return 0;
+      }
+    });
+  }, [data?.songs, search, sortBy]);
 
   const handleAddToFavorites = (songId: number) => {
     addToFavorites(songId);
@@ -152,6 +174,25 @@ export default function Songs() {
                 <X size={18} />
               </button>
             )}
+          </div>
+        )}
+
+        {!isFetching && data?.songs?.length > 0 && (
+          <div className="wrapper-of-artists-select">
+            <div className="category-songs__sorting">
+              <label htmlFor="songs-sort">Ταξινόμηση:</label>
+
+              <select
+                id="songs-sort"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+              >
+                <option value="title-asc">Αλφαβητικά (Α → Ω)</option>
+                <option value="title-desc">Αλφαβητικά (Ω → Α)</option>
+                <option value="date-asc">Ημερομηνία (παλαιότερα)</option>
+                <option value="date-desc">Ημερομηνία (νεότερα)</option>
+              </select>
+            </div>
           </div>
         )}
 
