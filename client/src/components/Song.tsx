@@ -138,25 +138,25 @@ const Song = () => {
     const getScrollSpeed = (speed: number) => {
       switch (speed) {
         case 1:
-          return 20;
+          return 10;
         case 2:
-          return 40;
+          return 20;
         case 3:
-          return 70;
+          return 40;
         case 4:
-          return 110;
+          return 70;
         case 5:
-          return 160;
+          return 90;
         case 6:
-          return 220;
+          return 120;
         case 7:
-          return 300;
+          return 150;
         case 8:
-          return 400;
+          return 200;
         case 9:
-          return 520;
+          return 300;
         case 10:
-          return 650;
+          return 500;
         default:
           return 20;
       }
