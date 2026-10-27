@@ -540,6 +540,17 @@
   color: #2175bb;
 }
 
+.tracking-wider {
+  font-size: 14px;
+  font-style: italic;
+  color: red;
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
 /* ACTIONS */
 
 .song-row__actions {
