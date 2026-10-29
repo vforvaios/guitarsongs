@@ -55,7 +55,43 @@ const getArtistsSongsById = async (req, res, next) => {
   }
 };
 
+const getArtistsByCategory = async (req, res, next) => {
+  try {
+    const [artists] = await db.query(`
+      SELECT
+        c.id AS category_id,
+        c.name AS category_name,
+        a.id AS artist_id,
+        a.name AS artist_name,
+        COUNT(DISTINCT s.id) AS song_count
+      FROM SONGS_CATEGORIES c
+      INNER JOIN SONG_CATEGORIES sc
+        ON sc.category_id = c.id
+      INNER JOIN SONGS s
+        ON s.id = sc.song_id
+      INNER JOIN ARTISTS a
+        ON a.id = s.artist_id
+      GROUP BY
+        c.id,
+        c.name,
+        a.id,
+        a.name
+      ORDER BY
+        c.name ASC,
+        a.name ASC
+    `);
+
+    return res.status(200).json({
+      artists,
+      count: artists.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getArtists,
   getArtistsSongsById,
+  getArtistsByCategory,
 };

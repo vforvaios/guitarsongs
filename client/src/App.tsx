@@ -12,6 +12,7 @@ import Song from "./components/Song";
 import ScrollToTop from "./components/utils/ScrollToTop";
 import ArtistSongs from "./components/ArtistSongs";
 import Header from "./components/Header";
+import Artists from "./components/Artists";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => {
               <Route path="/songs/:id" element={<Song />} />
               <Route path="/artists/:id" element={<ArtistSongs />} />
               <Route path="/admin" element={<AdminDashBoard />} />
+              <Route path="/artists" element={<Artists />} />
 
               {/* <Route path="songs">
                 <Route index element={<Songs />} />

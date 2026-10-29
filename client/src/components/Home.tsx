@@ -3,7 +3,7 @@ import { ArrowRight, Music2, Search } from "lucide-react";
 import "../styles/Home.scss";
 
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
 import { getCategories } from "@/services/categories";
@@ -280,6 +280,9 @@ export default function Home() {
                 ))}
               </select>
             </div>
+            <Link to="artists" className="see-all-artists">
+              Δες όλους τους καλλιτέχνες
+            </Link>
           </section>
         )}
       </main>

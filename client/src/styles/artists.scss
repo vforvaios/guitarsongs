@@ -1,0 +1,171 @@
+.see-all-artists {
+  padding: 10px 0;
+  color: red;
+  display: block;
+  text-align: right;
+}
+.artists-page {
+  min-height: 100vh;
+  background: #f8f8f8;
+  color: #080808;
+
+  &__header {
+    padding: 24px 20px;
+    background: #080808;
+    color: #fff;
+  }
+
+  &__back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 28px;
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    p {
+      margin: 8px 0 0;
+      color: #bebec1;
+      font-size: 14px;
+    }
+
+    > svg {
+      color: #c6371a;
+      flex-shrink: 0;
+    }
+  }
+
+  &__content {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  &__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border: 1px solid #e5e8e2;
+    border-radius: 12px;
+    background: #fff;
+
+    svg {
+      flex-shrink: 0;
+      color: #777;
+    }
+
+    input {
+      width: 100%;
+      border: 0;
+      outline: none;
+      background: transparent;
+      font-size: 15px;
+    }
+  }
+
+  &__category {
+    margin-top: 28px;
+
+    > h2 {
+      margin: 0 0 12px;
+      font-size: 19px;
+    }
+  }
+
+  &__empty {
+    padding: 40px 16px;
+    text-align: center;
+    color: #777;
+
+    h2 {
+      color: #080808;
+      font-size: 18px;
+    }
+  }
+}
+
+.artists-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.artist-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid #e5e8e2;
+  border-radius: 12px;
+  background: #fff;
+  color: #080808;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: #c6371a;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    background: #f8f8f8;
+    color: #c6371a;
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+
+    h3 {
+      margin: 0;
+      font-size: 15px;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__count {
+    flex-shrink: 0;
+    color: #777;
+    font-size: 13px;
+  }
+
+  > svg {
+    flex-shrink: 0;
+    color: #777;
+  }
+}
+
+@media (max-width: 420px) {
+  .artist-row {
+    gap: 8px;
+    padding: 12px;
+
+    &__count {
+      font-size: 12px;
+    }
+  }
+}
