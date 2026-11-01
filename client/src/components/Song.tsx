@@ -15,11 +15,13 @@ import {
   Plus,
 } from "lucide-react";
 import { addFavorite, removeFavorite } from "@/services/favorites";
+import { FormControlLabel, Switch } from "@mui/material";
 
 const MIN_SCROLL_SPEED = 1;
 const MAX_SCROLL_SPEED = 10;
 
 const Song = () => {
+  const [minimized, setMinimized] = useState(false);
   const chordContainerRef = useRef<HTMLDivElement | null>(null);
 
   const animationFrameRef = useRef<number | null>(null);
@@ -304,6 +306,17 @@ const Song = () => {
             </button>
 
             <span>Πίσω</span>
+            <div>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={minimized}
+                    onChange={() => setMinimized(!minimized)}
+                  />
+                }
+                label="Minimize"
+              />
+            </div>
           </div>
 
           {/* ----------------------------------------
@@ -474,11 +487,13 @@ const Song = () => {
               ChordPro
           ---------------------------------------- */}
 
-          <ChordProRenderer
-            content={data?.song[0]?.content}
-            showChords={true}
-            showDiagrams={false}
-          />
+          <div className={`${minimized ? "minimized" : ""}`}>
+            <ChordProRenderer
+              content={data?.song[0]?.content}
+              showChords={true}
+              showDiagrams={false}
+            />
+          </div>
         </div>
       )}
     </div>

@@ -636,6 +636,43 @@
   font-size: 11px;
 }
 
+.minimized {
+  .flex-1.overflow-y-auto.px-4.py-4.bg-slate-50.print-page.select-text.leading-relaxed.no-scrollbar.relative {
+    padding: 0;
+  }
+
+  .font-sans {
+    display: flex;
+    flex-wrap: wrap;
+    counter-reset: item-counter;
+
+    > div {
+      counter-increment: item-counter;
+      flex-basis: 50%;
+      max-width: 50%;
+      font-size: 10px;
+      padding-left: 8px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+
+      .tracking-wider {
+        font-size: 11px;
+        position: relative;
+
+        &:before {
+          content: counter(item-counter) ".";
+          font-weight: bold;
+        }
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+}
+
 /* =====================================================
    DESKTOP
 ===================================================== */
