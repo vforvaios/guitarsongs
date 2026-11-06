@@ -170,7 +170,12 @@ export default function Home() {
             {search.trim().length >= 2 && (
               <div className="search-results">
                 {searchResultsIsFetching ? (
-                  <div className="search-result-loading">Αναζήτηση...</div>
+                  <div
+                    className="search-result-loading"
+                    style={{ padding: "24px" }}
+                  >
+                    Αναζήτηση...
+                  </div>
                 ) : searchResults?.songs?.length > 0 ? (
                   <>
                     {searchResults.songs.map((song: any) => (
