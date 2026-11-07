@@ -15,7 +15,7 @@ const CategoryCard = ({ category }: { category: any }) => {
 
       <div className="category-info">
         <strong>{category.name}</strong>&nbsp;
-        <strong>({category.songCount})</strong>
+        <strong>({category.song_count})</strong>
       </div>
 
       <ArrowRight size={20} className="category-arrow" />

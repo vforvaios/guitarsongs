@@ -1,20 +1,21 @@
 const db = require("../services/db");
-require("dotenv").config();
 
 const getSongsByCategory = async (req, res, next) => {
   try {
     const categoryId = req.params.categoryId;
 
-    const [[category]] = await db.query(
+    const { rows: categories } = await db.query(
       `
-    SELECT
-      id,
-      name
-    FROM SONGS_CATEGORIES
-    WHERE id = ?
-  `,
+        SELECT
+          id,
+          name
+        FROM songs_categories
+        WHERE id = $1
+      `,
       [categoryId],
     );
+
+    const category = categories[0];
 
     if (!category) {
       return res.status(404).json({
@@ -22,28 +23,28 @@ const getSongsByCategory = async (req, res, next) => {
       });
     }
 
-    const [songs] = await db.query(
+    const { rows: songs } = await db.query(
       `
-    SELECT
-      s.id,
-      s.title,
-      s.artist_id,
-      s.created_at,
-      art.name AS artist_name,
-      CASE
-        WHEN f.song_id IS NOT NULL THEN 1
-        ELSE 0
-      END AS is_favorite
-    FROM SONGS s
-    INNER JOIN SONG_CATEGORIES sc
-      ON sc.song_id = s.id
-    INNER JOIN ARTISTS art
-      ON art.id = s.artist_id
-    LEFT JOIN FAVORITE_SONGS f
-      ON f.song_id = s.id
-    WHERE sc.category_id = ?
-    ORDER BY s.title
-    `,
+        SELECT
+          s.id,
+          s.title,
+          s.artist_id,
+          s.created_at,
+          art.name AS artist_name,
+          CASE
+            WHEN f.song_id IS NOT NULL THEN 1
+            ELSE 0
+          END AS is_favorite
+        FROM songs s
+        INNER JOIN song_categories sc
+          ON sc.song_id = s.id
+        INNER JOIN artists art
+          ON art.id = s.artist_id
+        LEFT JOIN favorite_songs f
+          ON f.song_id = s.id
+        WHERE sc.category_id = $1
+        ORDER BY s.title
+      `,
       [categoryId],
     );
 
@@ -53,7 +54,6 @@ const getSongsByCategory = async (req, res, next) => {
       count: songs.length,
     });
   } catch (error) {
-    res.sendStatus(401);
     next(error);
   }
 };
@@ -71,24 +71,24 @@ const searchSongs = async (req, res, next) => {
 
     const searchTerm = `%${search.trim()}%`;
 
-    const [songs] = await db.query(
+    const { rows: songs } = await db.query(
       `
-      SELECT
-        s.id,
-        s.title,
-        a.id AS artist_id,
-        a.name AS artist_name,
-        CASE
-          WHEN f.song_id IS NOT NULL THEN 1
-          ELSE 0
-        END AS is_favorite
-      FROM SONGS s
-      LEFT JOIN ARTISTS a
-        ON a.id = s.artist_id
-      LEFT JOIN FAVORITE_SONGS f
-        ON f.song_id = s.id
-      WHERE s.title LIKE ?
-      ORDER BY s.title
+        SELECT
+          s.id,
+          s.title,
+          a.id AS artist_id,
+          a.name AS artist_name,
+          CASE
+            WHEN f.song_id IS NOT NULL THEN 1
+            ELSE 0
+          END AS is_favorite
+        FROM songs s
+        LEFT JOIN artists a
+          ON a.id = s.artist_id
+        LEFT JOIN favorite_songs f
+          ON f.song_id = s.id
+        WHERE s.title ILIKE $1
+        ORDER BY s.title
       `,
       [searchTerm],
     );

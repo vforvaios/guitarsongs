@@ -241,7 +241,7 @@ export default function Home() {
                 category={{
                   name: "ΑΓΑΠΗΜΕΝΑ",
                   id: -1,
-                  songCount: favoritesData?.count,
+                  song_count: favoritesData?.count,
                 }}
               />
             )}

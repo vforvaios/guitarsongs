@@ -3,12 +3,12 @@ require("dotenv").config();
 
 const getCategories = async (req, res, next) => {
   try {
-    const [songsCategories] = await db.query(
+    const { rows: songsCategories } = await db.query(
       `
         SELECT
           sc.id,
           sc.name,
-          COUNT(s.id) AS songCount
+          COUNT(s.id) AS song_count
         FROM SONGS_CATEGORIES sc
         LEFT JOIN SONG_CATEGORIES scs
           ON scs.category_id = sc.id

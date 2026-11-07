@@ -1,21 +1,20 @@
 const db = require("../services/db");
-require("dotenv").config();
 
 const getFavorites = async (req, res, next) => {
   try {
-    const [favorites] = await db.query(`
+    const { rows: favorites } = await db.query(`
       SELECT
         s.id,
         s.title,
         a.name AS artist_name,
         f.created_at,
         CASE
-        WHEN f.song_id IS NOT NULL THEN 1
-        ELSE 0
-      END AS is_favorite
-      FROM FAVORITE_SONGS f
-      INNER JOIN SONGS s ON s.id = f.song_id
-      LEFT JOIN ARTISTS a ON a.id = s.artist_id
+          WHEN f.song_id IS NOT NULL THEN 1
+          ELSE 0
+        END AS is_favorite
+      FROM favorite_songs f
+      INNER JOIN songs s ON s.id = f.song_id
+      LEFT JOIN artists a ON a.id = s.artist_id
       ORDER BY f.created_at DESC
     `);
 
@@ -24,7 +23,6 @@ const getFavorites = async (req, res, next) => {
       count: favorites.length,
     });
   } catch (error) {
-    res.sendStatus(401);
     next(error);
   }
 };
@@ -39,14 +37,16 @@ const addFavorite = async (req, res, next) => {
       });
     }
 
-    const [
-      result,
-    ] = await db.query(
-      `INSERT IGNORE INTO FAVORITE_SONGS (song_id) VALUES (?)`,
+    const result = await db.query(
+      `
+        INSERT INTO favorite_songs (song_id)
+        VALUES ($1)
+        ON CONFLICT (song_id) DO NOTHING
+      `,
       [songId],
     );
 
-    if (result.affectedRows === 0) {
+    if (result.rowCount === 0) {
       return res.status(200).json({
         message: "Song is already a favorite",
       });
@@ -56,7 +56,6 @@ const addFavorite = async (req, res, next) => {
       message: "Favorite added successfully",
     });
   } catch (error) {
-    res.sendStatus(401);
     next(error);
   }
 };
@@ -71,13 +70,12 @@ const removeFavorite = async (req, res, next) => {
       });
     }
 
-    await db.query(`DELETE FROM FAVORITE_SONGS WHERE song_id = ?`, [songId]);
+    await db.query(`DELETE FROM favorite_songs WHERE song_id = $1`, [songId]);
 
     res.status(200).json({
       message: "Favorite removed successfully",
     });
   } catch (error) {
-    res.sendStatus(401);
     next(error);
   }
 };
