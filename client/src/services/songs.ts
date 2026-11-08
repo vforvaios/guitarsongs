@@ -15,4 +15,13 @@ const searchSongs = async (body: string) => {
   });
 };
 
-export { getSongsByCategory, getSongById, searchSongs };
+const createSong = async (payload: any) => {
+  debugger;
+  return makeRequest({
+    method: "POST",
+    url: `api/songs`,
+    body: JSON.stringify(payload),
+  });
+};
+
+export { getSongsByCategory, getSongById, searchSongs, createSong };

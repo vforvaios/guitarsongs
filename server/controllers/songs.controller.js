@@ -102,7 +102,55 @@ const searchSongs = async (req, res, next) => {
   }
 };
 
+const createSong = async (req, res, next) => {
+  const { title, artist_id, category_id, content } = req.body;
+
+  if (!title?.trim() || !artist_id || !category_id || !content?.trim()) {
+    return res.status(400).json({
+      message: "Missing required fields",
+    });
+  }
+
+  const client = await db.connect();
+
+  try {
+    await client.query("BEGIN");
+
+    const result = await client.query(
+      `
+        INSERT INTO SONGS (title, artist_id, content)
+        VALUES ($1, $2, $3)
+        RETURNING id
+      `,
+      [title.trim(), artist_id, content],
+    );
+
+    const songId = result.rows[0].id;
+
+    await client.query(
+      `
+          INSERT INTO SONG_CATEGORIES (song_id, category_id)
+          VALUES ($1, $2)
+        `,
+      [songId, category_id],
+    );
+
+    await client.query("COMMIT");
+
+    return res.status(200).json({
+      message: "Song created successfully",
+      songId,
+    });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   getSongsByCategory,
   searchSongs,
+  createSong,
 };
