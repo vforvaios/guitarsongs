@@ -67,13 +67,14 @@ const AdminEditSong = () => {
   }, [songData]);
 
   const updateMutation = useMutation({
-    mutationFn: () =>
-      updateSong(songId, {
+    mutationFn: () => {
+      return updateSong(songId, {
         title: formData.title.trim(),
         artist_id: Number(formData.artist_id),
-        category_id: formData.category_id,
+        category_id: Number(formData.category_id),
         content: formData.content,
-      }),
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin_songs"] });
       queryClient.invalidateQueries({ queryKey: ["admin_song", songId] });

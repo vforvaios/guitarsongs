@@ -40,7 +40,7 @@ const deleteSong = (id: number) => {
 const updateSong = (id: number, payload: any) => {
   return makeRequest({
     method: "PUT",
-    url: `api/songs/${id}`,
+    url: `api/song/${id}`,
     body: JSON.stringify(payload),
   });
 };
