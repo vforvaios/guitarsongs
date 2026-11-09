@@ -12,6 +12,7 @@ import "./styles/table.scss";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
 import store from "./store";
+import { AuthProvider } from "./context/AuthContext";
 
 const persistor = persistStore(store);
 
@@ -26,7 +27,9 @@ createRoot(document.getElementById("root") as HTMLElement).render(
   // <StrictMode>
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <App />
+      <AuthProvider>
+        <App />
+      </AuthProvider>
     </PersistGate>
   </Provider>,
   // </StrictMode>

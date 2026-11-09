@@ -18,6 +18,7 @@ import AddArtist from "./components/AddArtist";
 import AdminArtists from "./components/AdminArtistx";
 import AdminSongs from "./components/AdminSongs";
 import AdminEditSong from "./components/AdminEditSong";
+import Login from "./components/Login";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -35,35 +36,19 @@ const App = () => {
               <Route path="/categories/:id" element={<Songs />} />
               <Route path="/songs/:id" element={<Song />} />
               <Route path="/artists/:id" element={<ArtistSongs />} />
-              <Route path="/admin" element={<AdminHome />} />
-              <Route path="/admin/addsong" element={<AddSong />} />
-              <Route path="/admin/artists" element={<AdminArtists />} />
-              <Route path="/admin/songs" element={<AdminSongs />} />
-              <Route path="/admin/addartist" element={<AddArtist />} />
-              <Route path="/admin/songs/:id/edit" element={<AdminEditSong />} />
+
               <Route path="/artists" element={<Artists />} />
-
-              {/* <Route path="songs">
-                <Route index element={<Songs />} />
-                <Route path=":id" element={<Song />} />
-              </Route>
-
-              <Route path="favorites" element={<Favorites />} />
-              <Route path="setlists" element={<Setlists />} /> */}
+              <Route path="/login" element={<Login />} />
             </Route>
 
             <Route element={<ProtectedRoute />}>
               <Route path="admin" element={<AdminLayout />}>
-                {/* <Route index element={<AdminDashBoard />} /> */}
-
-                {/* <Route path="songs">
-                  <Route index element={<AdminSongs />} />
-                  <Route path="new" element={<AdminSongEditor />} />
-                  <Route path=":id/edit" element={<AdminSongEditor />} />
-                </Route>
-
+                <Route index element={<AdminHome />} />
+                <Route path="addsong" element={<AddSong />} />
                 <Route path="artists" element={<AdminArtists />} />
-                <Route path="categories" element={<AdminCategories />} /> */}
+                <Route path="songs" element={<AdminSongs />} />
+                <Route path="addartist" element={<AddArtist />} />
+                <Route path="songs/:id/edit" element={<AdminEditSong />} />
               </Route>
             </Route>
           </Routes>

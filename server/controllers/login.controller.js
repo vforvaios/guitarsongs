@@ -14,51 +14,49 @@ require("dotenv").config();
 const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const { value, error } = LOGINSCHEMA.validate(req.body);
+    const { error } = LOGINSCHEMA.validate(req.body);
 
     if (error) {
-      res.status(500).json({ error: config.messages.error });
-      return false;
+      return res.status(400).json({
+        message: config.messages.error,
+      });
     }
 
-    const [userInDb] = await db.query(
-      `SELECT name, email, password, isActive, tenant_id
-       FROM TENANTS WHERE email=?`,
-      [email]
+    const { rows } = await db.query(
+      `
+        SELECT id, email, password
+        FROM song_users
+        WHERE email = $1
+      `,
+      [email.toLowerCase().trim()],
     );
 
-    if (!userInDb?.[0]?.isActive) {
-      res.status(401).json({
-        error:
-          "Ο χρήστης σας είναι απενεργοποιημένος. Παρακαλώ επικοινωνήστε μαζί μας.",
-      });
-      return false;
+    const userInDb = rows[0];
+
+    if (!userInDb) {
+      return res.sendStatus(401);
     }
 
-    const userExists = await bcrypt.compare(password, userInDb[0].password);
+    const userExists = await bcrypt.compare(password, userInDb.password);
 
-    if (userExists) {
-      const user = {
-        tenant_id: userInDb[0].tenant_id,
-        email: userInDb[0].email,
-      };
-
-      jwt.sign(
-        { user },
-        process.env.API_SECRET_KEY || "",
-        { expiresIn: "1h" },
-        (err, token) => {
-          res.status(200).json({
-            userLoggedIn: { ...user },
-            token,
-          });
-        }
-      );
-    } else {
-      res.sendStatus(401);
+    if (!userExists) {
+      return res.sendStatus(401);
     }
+
+    const user = {
+      id: userInDb.id,
+      email: userInDb.email,
+    };
+
+    const token = jwt.sign({ user }, process.env.API_SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    return res.status(200).json({
+      userLoggedIn: user,
+      token,
+    });
   } catch (error) {
-    res.sendStatus(401);
     next(error);
   }
 };
@@ -82,7 +80,7 @@ const forgotUserPassword = async (req, res, next) => {
       `
     UPDATE users SET password=? WHERE email=? AND isAdmin=?
     `,
-      [hashPassword, username, 0]
+      [hashPassword, username, 0],
     );
 
     let transporter = nodeMailer.createTransport(config?.mail?.options);
@@ -135,7 +133,7 @@ const changeUserPassword = async (req, res, next) => {
       `
     UPDATE users SET password=? WHERE username=? AND isAdmin=?
     `,
-      [hashPassword, user, 0]
+      [hashPassword, user, 0],
     );
 
     res.status(200).json({ message: "Ο κωδικός σας άλλαξε." });
