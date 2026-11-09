@@ -149,8 +149,72 @@ const createSong = async (req, res, next) => {
   }
 };
 
+const getAdminSongs = async (req, res, next) => {
+  try {
+    const result = await db.query(`
+      SELECT
+        s.id,
+        s.title,
+        s.created_at,
+        a.name AS artist_name
+      FROM SONGS s
+      LEFT JOIN ARTISTS a ON a.id = s.artist_id
+      ORDER BY s.title ASC
+    `);
+
+    return res.status(200).json({
+      songs: result.rows,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteSong = async (req, res, next) => {
+  const client = await db.connect();
+
+  try {
+    const { id } = req.params;
+
+    await client.query("BEGIN");
+
+    const songResult = await client.query(
+      `SELECT id FROM SONGS WHERE id = $1`,
+      [id],
+    );
+
+    if (songResult.rows.length === 0) {
+      await client.query("ROLLBACK");
+
+      return res.status(404).json({
+        message: "Το τραγούδι δεν βρέθηκε.",
+      });
+    }
+
+    // Διαγραφή των συσχετίσεων του τραγουδιού.
+    await client.query(`DELETE FROM SONG_CATEGORIES WHERE song_id = $1`, [id]);
+
+    await client.query(`DELETE FROM FAVORITE_SONGS WHERE song_id = $1`, [id]);
+
+    await client.query(`DELETE FROM SONGS WHERE id = $1`, [id]);
+
+    await client.query("COMMIT");
+
+    return res.status(200).json({
+      message: "Song deleted successfully",
+    });
+  } catch (error) {
+    await client.query("ROLLBACK");
+    next(error);
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   getSongsByCategory,
   searchSongs,
   createSong,
+  getAdminSongs,
+  deleteSong,
 };

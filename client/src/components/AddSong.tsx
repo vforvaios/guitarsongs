@@ -8,7 +8,7 @@ import { createSong } from "@/services/songs";
 import { getArtists } from "@/services/artists";
 import { getCategories } from "@/services/categories";
 
-const AdminDashBoard = () => {
+const AddSong = () => {
   const queryClient = useQueryClient();
   const [content, setContent] = useState("{title: New Song}\n[C]Hello world");
   const [title, setTitle] = useState("");
@@ -209,4 +209,4 @@ const AdminDashBoard = () => {
   );
 };
 
-export default AdminDashBoard;
+export default AddSong;

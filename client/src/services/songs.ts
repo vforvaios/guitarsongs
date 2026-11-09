@@ -16,7 +16,6 @@ const searchSongs = async (body: string) => {
 };
 
 const createSong = async (payload: any) => {
-  debugger;
   return makeRequest({
     method: "POST",
     url: `api/songs`,
@@ -24,4 +23,34 @@ const createSong = async (payload: any) => {
   });
 };
 
-export { getSongsByCategory, getSongById, searchSongs, createSong };
+const getAdminSongs = async () => {
+  return makeRequest({
+    method: "GET",
+    url: `api/songs/admin`,
+  });
+};
+
+const deleteSong = (id: number) => {
+  return makeRequest({
+    method: "DELETE",
+    url: `api/songs/${id}`,
+  });
+};
+
+const updateSong = (id: number, payload: any) => {
+  return makeRequest({
+    method: "PUT",
+    url: `api/songs/${id}`,
+    body: JSON.stringify(payload),
+  });
+};
+
+export {
+  getAdminSongs,
+  deleteSong,
+  getSongsByCategory,
+  getSongById,
+  searchSongs,
+  createSong,
+  updateSong,
+};
