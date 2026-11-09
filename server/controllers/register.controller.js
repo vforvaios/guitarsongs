@@ -1,61 +1,50 @@
 const bcrypt = require("bcrypt");
-const config = require("../config");
 const db = require("../services/db");
 const { REGISTERSCHEMA } = require("../schemas/loginregister.schema");
 
 const registerUser = async (req, res, next) => {
   try {
-    const { v4: uuidv4 } = await import("uuid");
-    const { email, password, name } = req.body;
-    const { value, error } = REGISTERSCHEMA.validate(req.body);
+    const { error, value } = REGISTERSCHEMA.validate(req.body);
 
     if (error) {
-      res.status(500).json({ error: config.messages.error });
-      return false;
+      return res.status(400).json({
+        message: error.details[0].message,
+      });
     }
 
-    const [userExists] = await db.query(
-      `
-    SELECT COUNT(*) as user FROM TENANTS WHERE email=?
-    `,
-      [email]
-    );
+    const email = value.email.trim().toLowerCase();
+    const password = value.password;
 
-    if (userExists?.[0]?.user >= 1) {
-      res.status(500).json({ error: "Το email υπάρχει ήδη. Επιλέξτε άλλο." });
-      return false;
+    // Έλεγχος αν υπάρχει ήδη το email
+    const {
+      rows: existingUsers,
+    } = await db.query(`SELECT id FROM song_users WHERE email = $1`, [email]);
+
+    if (existingUsers.length > 0) {
+      return res.status(409).json({
+        message: "Το email υπάρχει ήδη. Επιλέξτε άλλο.",
+      });
     }
 
-    if (name === "") {
-      res.status(400).json({ error: "Δεν έχετε δώσει name" });
-      return false;
-    }
-
-    if (email === "") {
-      res.status(400).json({ error: "Δεν έχετε δώσει email" });
-      return false;
-    }
-
-    if (password === "") {
-      res.status(400).json({ error: "Δεν έχετε δώσει κωδικό" });
-      return false;
-    }
-
+    // Hash password
     const salt = await bcrypt.genSalt(12);
     const hashPassword = await bcrypt.hash(password, salt);
 
-    const sql = `INSERT INTO TENANTS(name, password, email, template_id, tenant_id) VALUES (?,?,?,?)`;
-    const [result] = await db.query(sql, [
-      name,
-      hashPassword,
-      email,
-      config.defaultTemplateId,
-      uuidv4(),
-    ]);
+    // Δημιουργία χρήστη
+    const { rows } = await db.query(
+      `
+        INSERT INTO song_users (email, password)
+        VALUES ($1, $2)
+        RETURNING id, email
+      `,
+      [email, hashPassword],
+    );
 
-    res.status(200).json({ message: "Η εγγραφή ολοκληρώθηκε επιτυχώς!" });
+    return res.status(201).json({
+      message: "Η εγγραφή ολοκληρώθηκε επιτυχώς!",
+      user: rows[0],
+    });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

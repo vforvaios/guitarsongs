@@ -1,10 +1,12 @@
 const express = require("express");
+const verifyToken = require("../utils/verifyToken");
+
 const Songs = require("../controllers/songs.controller");
 
 const router = express.Router();
 
 // Δημιουργία τραγουδιού
-router.post("/", Songs.createSong);
+router.post("/", [verifyToken], Songs.createSong);
 
 // Αναζήτηση τραγουδιών
 router.post("/search", Songs.searchSongs);
@@ -13,7 +15,7 @@ router.post("/search", Songs.searchSongs);
 router.get("/admin", Songs.getAdminSongs);
 
 // Διαγραφή τραγουδιού
-router.delete("/:id", Songs.deleteSong);
+router.delete("/:id", [verifyToken], Songs.deleteSong);
 
 // Τραγούδια ανά κατηγορία
 router.get("/:categoryId", Songs.getSongsByCategory);

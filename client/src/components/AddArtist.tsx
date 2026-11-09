@@ -3,11 +3,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { ArrowLeft, UserPlus, Loader2 } from "lucide-react";
 import { createArtist } from "@/services/artists";
+import { useAuth } from "@/context/AuthContext";
 
 const AddArtist = () => {
   const [name, setName] = useState("");
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { token } = useAuth();
 
   const { mutate, isPending } = useMutation({
     mutationFn: createArtist,
@@ -33,7 +35,7 @@ const AddArtist = () => {
       return;
     }
 
-    mutate(trimmedName);
+    mutate({ name: trimmedName, token });
   };
 
   return (

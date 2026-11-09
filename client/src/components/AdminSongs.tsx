@@ -92,7 +92,7 @@ const AdminSongs = () => {
 
           <button
             type="button"
-            onClick={() => navigate("/admin/songs/new")}
+            onClick={() => navigate("/admin/addsong")}
             className="flex items-center justify-center gap-2 rounded-lg bg-[#c6371a] px-4 py-3 font-semibold text-white transition hover:bg-[#a92e16]"
           >
             <Plus size={18} />

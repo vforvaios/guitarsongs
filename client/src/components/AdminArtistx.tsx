@@ -12,6 +12,7 @@ import {
   UserPlus,
 } from "lucide-react";
 import { deleteArtist, getArtists, updateArtist } from "@/services/artists";
+import { useAuth } from "@/context/AuthContext";
 
 interface Artist {
   id: number;
@@ -21,6 +22,7 @@ interface Artist {
 const AdminArtists = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { token } = useAuth();
 
   const [search, setSearch] = useState("");
   const [editingArtistId, setEditingArtistId] = useState<number | null>(null);
@@ -45,7 +47,7 @@ const AdminArtists = () => {
 
   const updateMutation = useMutation({
     mutationFn: ({ id, name }: { id: number; name: string }) =>
-      updateArtist(id, name),
+      updateArtist({ id, name, token }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["artists"] });
       queryClient.invalidateQueries({ queryKey: ["artists_by_category"] });
@@ -90,7 +92,7 @@ const AdminArtists = () => {
     );
 
     if (confirmed) {
-      deleteMutation.mutate(artist.id);
+      deleteMutation.mutate({ id: artist.id, token });
     }
   };
 
@@ -123,7 +125,7 @@ const AdminArtists = () => {
 
           <button
             type="button"
-            onClick={() => navigate("/admin/artists/new")}
+            onClick={() => navigate("/admin/addartist")}
             className="flex items-center justify-center gap-2 rounded-lg bg-[#c6371a] px-4 py-3 font-semibold text-white transition hover:bg-[#a92e16]"
           >
             <UserPlus size={18} />

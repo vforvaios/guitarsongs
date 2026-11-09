@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from "react";
-
 import type { ReactNode } from "react";
 
 interface User {
@@ -14,27 +13,41 @@ interface AuthContextType {
   logout: () => void;
 }
 
+const STORAGE_KEY = "songbook_auth";
+
+const getStoredAuth = () => {
+  try {
+    const storedAuth = localStorage.getItem(STORAGE_KEY);
+
+    return storedAuth ? JSON.parse(storedAuth) : null;
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
+};
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const [user, setUser] = useState<User | null>(null);
+  const [auth, setAuth] = useState(() => getStoredAuth());
 
   const login = (token: string, user: User) => {
-    setToken(token);
-    setUser(user);
+    const authData = { token, user };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
+    setAuth(authData);
   };
 
   const logout = () => {
-    setToken(null);
-    setUser(null);
+    localStorage.removeItem(STORAGE_KEY);
+    setAuth(null);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        token,
-        user,
+        token: auth?.token ?? null,
+        user: auth?.user ?? null,
         login,
         logout,
       }}

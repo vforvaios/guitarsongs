@@ -19,6 +19,7 @@ import AdminArtists from "./components/AdminArtistx";
 import AdminSongs from "./components/AdminSongs";
 import AdminEditSong from "./components/AdminEditSong";
 import Login from "./components/Login";
+import Register from "./components/Register";
 
 const App = () => {
   const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => {
 
               <Route path="/artists" element={<Artists />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Route>
 
             <Route element={<ProtectedRoute />}>

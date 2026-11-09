@@ -6,7 +6,6 @@ const LOGINSCHEMA = Joi.object().keys({
 });
 
 const REGISTERSCHEMA = Joi.object().keys({
-  name: Joi.string().required(),
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .required(),

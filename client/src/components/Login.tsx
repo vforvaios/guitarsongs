@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Eye, EyeOff } from "lucide-react";
 import { loginUser } from "@/services/login";
 import { useAuth } from "@/context/AuthContext";
@@ -88,6 +88,7 @@ const Login = () => {
           >
             {mutation.isPending ? "Σύνδεση..." : "ΣΥΝΔΕΣΗ"}
           </button>
+          <Link to="/register">Register</Link>
         </form>
 
         <p className="text-gray-500 text-center text-xs mt-8">

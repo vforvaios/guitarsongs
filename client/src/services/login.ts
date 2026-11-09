@@ -4,6 +4,10 @@ interface LoginPayload {
   email: string;
   password: string;
 }
+interface RegisterPayload {
+  email: string;
+  password: string;
+}
 
 const loginUser = (payload: LoginPayload) =>
   makeRequest({
@@ -12,4 +16,11 @@ const loginUser = (payload: LoginPayload) =>
     body: JSON.stringify(payload),
   });
 
-export { loginUser };
+const registerUser = (payload: RegisterPayload) =>
+  makeRequest({
+    method: "POST",
+    url: "api/register",
+    body: JSON.stringify(payload),
+  });
+
+export { loginUser, registerUser };
