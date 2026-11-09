@@ -12,6 +12,7 @@ import {
   Plus,
 } from "lucide-react";
 import { deleteSong, getAdminSongs } from "@/services/songs";
+import { useAuth } from "@/context/AuthContext";
 
 interface AdminSong {
   id: number;
@@ -23,12 +24,14 @@ interface AdminSong {
 const AdminSongs = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { token } = useAuth();
 
   const [search, setSearch] = useState("");
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["admin_songs"],
     queryFn: getAdminSongs,
+    refetchOnWindowFocus: false,
   });
 
   const songs: AdminSong[] = data?.songs ?? [];
@@ -64,7 +67,7 @@ const AdminSongs = () => {
     );
 
     if (confirmed) {
-      deleteMutation.mutate(song.id);
+      deleteMutation.mutate({ id: song.id, token });
     }
   };
 

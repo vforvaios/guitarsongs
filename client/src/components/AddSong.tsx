@@ -7,8 +7,10 @@ import { createSong } from "@/services/songs";
 
 import { getArtists } from "@/services/artists";
 import { getCategories } from "@/services/categories";
+import { useAuth } from "@/context/AuthContext";
 
 const AddSong = () => {
+  const { token } = useAuth();
   const queryClient = useQueryClient();
   const [content, setContent] = useState("{title: New Song}\n[C]Hello world");
   const [title, setTitle] = useState("");
@@ -18,11 +20,13 @@ const AddSong = () => {
   const { data: artistsData, isFetching: isFetchingArtists } = useQuery({
     queryKey: ["artists"],
     queryFn: getArtists,
+    refetchOnWindowFocus: false,
   });
 
   const { data: categoriesData, isFetching: isFetchingCategories } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
+    refetchOnWindowFocus: false,
   });
 
   const { mutate: insertSong, isPending } = useMutation({
@@ -62,10 +66,13 @@ const AddSong = () => {
     }
 
     insertSong({
-      title: title.trim(),
-      artist_id: Number(artistId),
-      category_id: Number(categoryId),
-      content,
+      payload: {
+        title: title.trim(),
+        artist_id: Number(artistId),
+        category_id: Number(categoryId),
+        content,
+      },
+      token,
     });
   };
 

@@ -40,9 +40,6 @@ const updateSong = async (req, res, next) => {
   const { songId } = req.params;
   const { title, artist_id, category_id, content } = req.body;
 
-  console.log(songId);
-  // return false;
-
   if (!title?.trim() || !artist_id || !category_id || !content?.trim()) {
     return res.status(400).json({
       message: "All fields are required",

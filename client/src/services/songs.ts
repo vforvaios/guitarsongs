@@ -15,11 +15,12 @@ const searchSongs = async (body: string) => {
   });
 };
 
-const createSong = async (payload: any) => {
+const createSong = async ({ payload, token }: any) => {
   return makeRequest({
     method: "POST",
     url: `api/songs`,
     body: JSON.stringify(payload),
+    token,
   });
 };
 
@@ -30,18 +31,20 @@ const getAdminSongs = async () => {
   });
 };
 
-const deleteSong = (id: number) => {
+const deleteSong = ({ id, token }: any) => {
   return makeRequest({
     method: "DELETE",
     url: `api/songs/${id}`,
+    token,
   });
 };
 
-const updateSong = (id: number, payload: any) => {
+const updateSong = ({ id, payload, token }: any) => {
   return makeRequest({
     method: "PUT",
     url: `api/song/${id}`,
     body: JSON.stringify(payload),
+    token,
   });
 };
 

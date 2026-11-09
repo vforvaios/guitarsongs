@@ -7,6 +7,7 @@ import ChordProRenderer from "@hosanna/chordpro/renderer";
 import { getCategories } from "@/services/categories";
 import { getArtists } from "@/services/artists";
 import { getSongById, updateSong } from "@/services/songs";
+import { useAuth } from "@/context/AuthContext";
 
 interface SongFormData {
   title: string;
@@ -19,6 +20,7 @@ const AdminEditSong = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { token } = useAuth();
 
   const songId = Number(id);
 
@@ -37,16 +39,19 @@ const AdminEditSong = () => {
     queryKey: ["admin_song", songId],
     queryFn: () => getSongById(songId),
     enabled: Number.isInteger(songId) && songId > 0,
+    refetchOnWindowFocus: false,
   });
 
   const { data: artistsData } = useQuery({
     queryKey: ["artists"],
     queryFn: getArtists,
+    refetchOnWindowFocus: false,
   });
 
   const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
+    refetchOnWindowFocus: false,
   });
 
   const artists = artistsData?.artists ?? [];
@@ -68,11 +73,15 @@ const AdminEditSong = () => {
 
   const updateMutation = useMutation({
     mutationFn: () => {
-      return updateSong(songId, {
-        title: formData.title.trim(),
-        artist_id: Number(formData.artist_id),
-        category_id: Number(formData.category_id),
-        content: formData.content,
+      return updateSong({
+        id: songId,
+        payload: {
+          title: formData.title.trim(),
+          artist_id: Number(formData.artist_id),
+          category_id: Number(formData.category_id),
+          content: formData.content,
+        },
+        token,
       });
     },
     onSuccess: () => {
