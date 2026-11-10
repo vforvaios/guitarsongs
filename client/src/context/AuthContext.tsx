@@ -17,11 +17,11 @@ const STORAGE_KEY = "songbook_auth";
 
 const getStoredAuth = () => {
   try {
-    const storedAuth = localStorage.getItem(STORAGE_KEY);
+    const storedAuth = sessionStorage.getItem(STORAGE_KEY);
 
     return storedAuth ? JSON.parse(storedAuth) : null;
   } catch {
-    localStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(STORAGE_KEY);
     return null;
   }
 };
@@ -34,12 +34,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (token: string, user: User) => {
     const authData = { token, user };
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
     setAuth(authData);
   };
 
   const logout = () => {
-    localStorage.removeItem(STORAGE_KEY);
+    sessionStorage.removeItem(STORAGE_KEY);
     setAuth(null);
   };
 
