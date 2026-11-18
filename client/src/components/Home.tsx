@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { getCategories } from "@/services/categories";
 import { getArtists } from "@/services/artists";
-import { searchSongs } from "@/services/songs";
+import { getAllSongsCount, searchSongs } from "@/services/songs";
 
 import CategoryCard from "./CategoryCard";
 import CategorySkeleton from "./loaders/CategorySkeleton";
@@ -32,6 +32,12 @@ export default function Home() {
   const { data, isFetching, isError, error } = useQuery({
     queryKey: ["song_categories"],
     queryFn: getCategories,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: allSongsCount } = useQuery({
+    queryKey: ["allSongsCount"],
+    queryFn: getAllSongsCount,
     refetchOnWindowFocus: false,
   });
 
@@ -131,7 +137,7 @@ export default function Home() {
           <h1>
             Το προσωπικό σου
             <br />
-            SongBook
+            SongBook ({allSongsCount?.countSongs} τραγούδια)
           </h1>
 
           <p>

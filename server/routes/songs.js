@@ -13,6 +13,7 @@ router.post("/search", Songs.searchSongs);
 
 // Εύρεση όλων των τραγουδιών για το Admin
 router.get("/admin", Songs.getAdminSongs);
+router.get("/all", Songs.getAllSongsCount);
 
 // Διαγραφή τραγουδιού
 router.delete("/:id", [verifyToken], Songs.deleteSong);

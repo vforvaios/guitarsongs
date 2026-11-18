@@ -1,5 +1,23 @@
 const db = require("../services/db");
 
+const getAllSongsCount = async (req, res, next) => {
+  try {
+    const { rows: countSongs } = await db.query(
+      `
+        SELECT
+          COUNT(*) as songscount
+        FROM songs
+      `,
+    );
+
+    return res.json({
+      countSongs: countSongs?.[0].songscount,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getSongsByCategory = async (req, res, next) => {
   try {
     const categoryId = req.params.categoryId;
@@ -217,4 +235,5 @@ module.exports = {
   createSong,
   getAdminSongs,
   deleteSong,
+  getAllSongsCount,
 };

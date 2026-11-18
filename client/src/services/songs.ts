@@ -31,6 +31,13 @@ const getAdminSongs = async () => {
   });
 };
 
+const getAllSongsCount = async () => {
+  return makeRequest({
+    method: "GET",
+    url: `api/songs/all`,
+  });
+};
+
 const deleteSong = ({ id, token }: any) => {
   return makeRequest({
     method: "DELETE",
@@ -56,4 +63,5 @@ export {
   searchSongs,
   createSong,
   updateSong,
+  getAllSongsCount,
 };
