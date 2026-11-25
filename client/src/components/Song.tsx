@@ -1,7 +1,7 @@
 import { getSongById } from "@/services/songs";
 import ChordProRenderer from "@hosanna/chordpro/renderer";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SongSkeleton from "./loaders/SongSkeleton";
 import { useCallback, useEffect, useRef, useState } from "react";
 import useChordAudio from "@/hooks/useChordAudio";
@@ -440,7 +440,9 @@ const Song = () => {
               textAlign: "center",
             }}
           >
-            {data?.song[0]?.artistName}
+            <Link to={`/artists/${data?.song[0]?.artist_id}`}>
+              {data?.song[0]?.artistName}
+            </Link>
           </h2>
           <div
             style={{
