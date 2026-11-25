@@ -26,7 +26,7 @@ const Song = () => {
 
   const animationFrameRef = useRef<number | null>(null);
   const lastFrameTimeRef = useRef<number | null>(null);
-  const scrollSpeedRef = useRef(3);
+  const scrollSpeedRef = useRef(1);
   const scrollPositionRef = useRef(0);
 
   const songId = useParams().id;
@@ -140,25 +140,25 @@ const Song = () => {
     const getScrollSpeed = (speed: number) => {
       switch (speed) {
         case 1:
-          return 10;
+          return 3;
         case 2:
-          return 20;
+          return 15;
         case 3:
-          return 40;
+          return 30;
         case 4:
-          return 70;
+          return 50;
         case 5:
-          return 90;
+          return 80;
         case 6:
-          return 120;
+          return 100;
         case 7:
-          return 150;
+          return 120;
         case 8:
-          return 200;
+          return 150;
         case 9:
-          return 300;
+          return 230;
         case 10:
-          return 500;
+          return 350;
         default:
           return 20;
       }
