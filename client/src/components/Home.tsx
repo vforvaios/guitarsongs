@@ -1,4 +1,4 @@
-import { ArrowRight, Music2, Search } from "lucide-react";
+import { ArrowRight, Music2, Search, Loader } from "lucide-react";
 
 import "../styles/Home.scss";
 
@@ -35,11 +35,13 @@ export default function Home() {
     refetchOnWindowFocus: false,
   });
 
-  const { data: allSongsCount } = useQuery({
-    queryKey: ["allSongsCount"],
-    queryFn: getAllSongsCount,
-    refetchOnWindowFocus: false,
-  });
+  const { data: allSongsCount, isFetching: allSongsCountIsFetching } = useQuery(
+    {
+      queryKey: ["allSongsCount"],
+      queryFn: getAllSongsCount,
+      refetchOnWindowFocus: false,
+    },
+  );
 
   const { data: favoritesData } = useQuery({
     queryKey: ["favorite_songs"],
@@ -137,7 +139,20 @@ export default function Home() {
           <h1>
             Το προσωπικό σου
             <br />
-            SongBook ({allSongsCount?.countSongs} τραγούδια)
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "start",
+              }}
+            >
+              SongBook&nbsp;
+              {allSongsCountIsFetching || !allSongsCount ? (
+                <Loader />
+              ) : (
+                `(${allSongsCount?.countSongs ?? 0} τραγούδια)`
+              )}
+            </div>
           </h1>
 
           <p>
